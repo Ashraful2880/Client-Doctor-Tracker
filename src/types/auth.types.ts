@@ -21,3 +21,8 @@ export interface RegisterPayload {
   password: string;
 }
 
+export interface AuthState {
+  user: User | null;
+  hydrated: boolean;
+  token: string | null;
+}

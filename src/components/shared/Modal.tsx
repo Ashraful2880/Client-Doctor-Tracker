@@ -1,36 +1,28 @@
-'use client';
+"use client";
 
-import React, { useEffect } from 'react';
-import { X } from 'lucide-react';
-
-interface ModalProps {
-  open: boolean;
-  onClose: () => void;
-  title: string;
-  description?: string;
-  children: React.ReactNode;
-  maxWidthClass?: string;
-}
+import { X } from "lucide-react";
+import React, { useEffect } from "react";
+import { ModalProps } from "@/types/InterfaceAll";
 
 export function Modal({
   open,
-  onClose,
   title,
-  description,
+  onClose,
   children,
-  maxWidthClass = 'max-w-lg',
+  description,
+  maxWidthClass = "max-w-lg",
 }: ModalProps) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
     if (open) {
-      document.addEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = 'hidden';
+      document.addEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "hidden";
     }
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = '';
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
     };
   }, [open, onClose]);
 
@@ -39,9 +31,9 @@ export function Modal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
-        className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs"
         onClick={onClose}
         aria-hidden="true"
+        className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs"
       />
       <div
         role="dialog"
@@ -51,7 +43,9 @@ export function Modal({
         <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
           <div>
             <h2 className="text-lg font-semibold text-slate-900">{title}</h2>
-            {description && <p className="mt-0.5 text-sm text-slate-500">{description}</p>}
+            {description && (
+              <p className="mt-0.5 text-sm text-slate-500">{description}</p>
+            )}
           </div>
           <button
             type="button"
@@ -67,4 +61,3 @@ export function Modal({
     </div>
   );
 }
-

@@ -1,22 +1,16 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { Modal } from '@/components/shared/Modal';
-import { FormField, inputClassName } from '@/components/shared/FormField';
-import { GENDERS, PATIENT_CONDITIONS } from '@/utils/constants';
-import { Gender, Patient } from '@/types/patient.types';
-import { useGetDoctorOptionsQuery } from '@/store/api/doctorsApi';
 import {
   useCreatePatientMutation,
   useUpdatePatientMutation,
-} from '@/store/api/patientsApi';
-
-interface PatientFormModalProps {
-  open: boolean;
-  onClose: () => void;
-  patient?: Patient | null;
-  lockedDoctorId?: string;
-}
+} from "@/store/api/patientsApi";
+import { Modal } from "@/components/shared/Modal";
+import React, { useEffect, useState } from "react";
+import { CustomSelect } from "@/components/shared/CustomSelect";
+import { GENDERS, PATIENT_CONDITIONS } from "@/utils/constants";
+import { useGetDoctorOptionsQuery } from "@/store/api/doctorsApi";
+import { Gender, PatientFormModalProps } from "@/types/patient.types";
+import { FormField, inputClassName } from "@/components/shared/FormField";
 
 export function PatientFormModal({
   open,
@@ -25,20 +19,22 @@ export function PatientFormModal({
   lockedDoctorId,
 }: PatientFormModalProps) {
   const isEditing = Boolean(patient);
-  const { data: doctorOptionsRes } = useGetDoctorOptionsQuery(undefined, { skip: !open });
+  const { data: doctorOptionsRes } = useGetDoctorOptionsQuery(undefined, {
+    skip: !open,
+  });
   const doctorOptions = doctorOptionsRes?.data ?? [];
 
   const [form, setForm] = useState({
-    name: '',
-    age: '30',
-    gender: 'Male' as Gender,
-    phone: '',
-    email: '',
-    condition: 'General',
-    notes: '',
-    doctorId: lockedDoctorId || '',
+    name: "",
+    age: "30",
+    phone: "",
+    email: "",
+    notes: "",
+    condition: "General",
+    gender: "Male" as Gender,
+    doctorId: lockedDoctorId || "",
   });
-  const [errorMsg, setErrorMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState("");
 
   const [createPatient, { isLoading: isCreating }] = useCreatePatientMutation();
   const [updatePatient, { isLoading: isUpdating }] = useUpdatePatientMutation();
@@ -47,43 +43,45 @@ export function PatientFormModal({
   useEffect(() => {
     if (patient) {
       const docId =
-        typeof patient.doctorId === 'string' ? patient.doctorId : patient.doctorId?._id || '';
+        typeof patient.doctorId === "string"
+          ? patient.doctorId
+          : patient.doctorId?._id || "";
       setForm({
         name: patient.name,
-        age: String(patient.age),
-        gender: patient.gender,
         phone: patient.phone,
-        email: patient.email || '',
+        gender: patient.gender,
+        age: String(patient.age),
+        email: patient.email || "",
+        notes: patient.notes || "",
         condition: patient.condition,
-        notes: patient.notes || '',
         doctorId: lockedDoctorId || docId,
       });
     } else {
       setForm({
-        name: '',
-        age: '30',
-        gender: 'Male',
-        phone: '',
-        email: '',
-        condition: 'General',
-        notes: '',
-        doctorId: lockedDoctorId || doctorOptions[0]?._id || '',
+        name: "",
+        age: "30",
+        phone: "",
+        email: "",
+        notes: "",
+        gender: "Male",
+        condition: "General",
+        doctorId: lockedDoctorId || doctorOptions[0]?._id || "",
       });
     }
-    setErrorMsg('');
+    setErrorMsg("");
   }, [patient, open, lockedDoctorId, doctorOptions]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrorMsg('');
+    setErrorMsg("");
 
     const payload = {
       name: form.name,
-      age: Number(form.age),
-      gender: form.gender,
       phone: form.phone,
-      email: form.email || undefined,
+      gender: form.gender,
+      age: Number(form.age),
       condition: form.condition,
+      email: form.email || undefined,
       notes: form.notes || undefined,
       doctorId: lockedDoctorId || form.doctorId,
     };
@@ -97,7 +95,10 @@ export function PatientFormModal({
       onClose();
     } catch (err: unknown) {
       const apiErr = err as { data?: { message?: string } };
-      setErrorMsg(apiErr?.data?.message || 'Failed to save patient. Please check your inputs.');
+      setErrorMsg(
+        apiErr?.data?.message ||
+          "Failed to save patient. Please check your inputs.",
+      );
     }
   };
 
@@ -105,11 +106,11 @@ export function PatientFormModal({
     <Modal
       open={open}
       onClose={onClose}
-      title={isEditing ? 'Edit Patient' : 'Add New Patient'}
+      title={isEditing ? "Edit Patient" : "Add New Patient"}
       description={
         isEditing
-          ? 'Update patient clinical and contact information.'
-          : 'Register a new patient and assign them to a doctor.'
+          ? "Update patient clinical and contact information."
+          : "Register a new patient and assign them to a doctor."
       }
     >
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -121,119 +122,116 @@ export function PatientFormModal({
 
         <FormField label="Patient Name" htmlFor="patient-name" required>
           <input
-            id="patient-name"
-            type="text"
             required
-            placeholder="e.g. Liam Carter"
+            type="text"
+            id="patient-name"
             value={form.name}
-            onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
             className={inputClassName}
+            placeholder="e.g. Liam Carter"
+            onChange={(e) =>
+              setForm((prev) => ({ ...prev, name: e.target.value }))
+            }
           />
         </FormField>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <FormField label="Age" htmlFor="patient-age" required>
             <input
-              id="patient-age"
-              type="number"
               min={0}
-              max={150}
               required
+              max={150}
+              type="number"
+              id="patient-age"
               value={form.age}
-              onChange={(e) => setForm((prev) => ({ ...prev, age: e.target.value }))}
               className={inputClassName}
+              onChange={(e) =>
+                setForm((prev) => ({ ...prev, age: e.target.value }))
+              }
             />
           </FormField>
 
           <FormField label="Gender" htmlFor="patient-gender" required>
-            <select
+            <CustomSelect
               id="patient-gender"
-              required
               value={form.gender}
-              onChange={(e) =>
-                setForm((prev) => ({ ...prev, gender: e.target.value as Gender }))
+              options={GENDERS.map((g) => ({ label: g, value: g }))}
+              onChange={(val) =>
+                setForm((prev) => ({ ...prev, gender: val as Gender }))
               }
-              className={inputClassName}
-            >
-              {GENDERS.map((g) => (
-                <option key={g} value={g}>
-                  {g}
-                </option>
-              ))}
-            </select>
+            />
           </FormField>
 
           <FormField label="Condition" htmlFor="patient-condition" required>
-            <select
+            <CustomSelect
               id="patient-condition"
-              required
               value={form.condition}
-              onChange={(e) => setForm((prev) => ({ ...prev, condition: e.target.value }))}
-              className={inputClassName}
-            >
-              {PATIENT_CONDITIONS.map((cond) => (
-                <option key={cond} value={cond}>
-                  {cond}
-                </option>
-              ))}
-            </select>
+              options={PATIENT_CONDITIONS.map((cond) => ({
+                label: cond,
+                value: cond,
+              }))}
+              onChange={(val) =>
+                setForm((prev) => ({ ...prev, condition: val }))
+              }
+            />
           </FormField>
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FormField label="Phone" htmlFor="patient-phone" required>
             <input
-              id="patient-phone"
-              type="text"
               required
-              placeholder="e.g. +1-555-0244"
+              type="text"
+              id="patient-phone"
               value={form.phone}
-              onChange={(e) => setForm((prev) => ({ ...prev, phone: e.target.value }))}
               className={inputClassName}
+              placeholder="e.g. +1-555-0244"
+              onChange={(e) =>
+                setForm((prev) => ({ ...prev, phone: e.target.value }))
+              }
             />
           </FormField>
 
           <FormField label="Email (Optional)" htmlFor="patient-email">
             <input
-              id="patient-email"
               type="email"
-              placeholder="e.g. patient@example.com"
+              id="patient-email"
               value={form.email}
-              onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
               className={inputClassName}
+              placeholder="e.g. patient@example.com"
+              onChange={(e) =>
+                setForm((prev) => ({ ...prev, email: e.target.value }))
+              }
             />
           </FormField>
         </div>
 
         {!lockedDoctorId && (
           <FormField label="Assigned Doctor" htmlFor="patient-doctor" required>
-            <select
+            <CustomSelect
               id="patient-doctor"
-              required
               value={form.doctorId}
-              onChange={(e) => setForm((prev) => ({ ...prev, doctorId: e.target.value }))}
-              className={inputClassName}
-            >
-              <option value="" disabled>
-                Select a doctor
-              </option>
-              {doctorOptions.map((doc) => (
-                <option key={doc._id} value={doc._id}>
-                  {doc.name} ({doc.specialization})
-                </option>
-              ))}
-            </select>
+              placeholder="Select a doctor"
+              options={doctorOptions.map((doc) => ({
+                label: `${doc.name} (${doc.specialization})`,
+                value: doc._id,
+              }))}
+              onChange={(val) =>
+                setForm((prev) => ({ ...prev, doctorId: val }))
+              }
+            />
           </FormField>
         )}
 
         <FormField label="Clinical Notes (Optional)" htmlFor="patient-notes">
           <textarea
-            id="patient-notes"
             rows={2}
-            placeholder="Brief clinical notes or follow-up details..."
+            id="patient-notes"
             value={form.notes}
-            onChange={(e) => setForm((prev) => ({ ...prev, notes: e.target.value }))}
             className={inputClassName}
+            placeholder="Brief clinical notes or follow-up details..."
+            onChange={(e) =>
+              setForm((prev) => ({ ...prev, notes: e.target.value }))
+            }
           />
         </FormField>
 
@@ -251,11 +249,14 @@ export function PatientFormModal({
             disabled={isSubmitting}
             className="rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-sky-700 disabled:opacity-60"
           >
-            {isSubmitting ? 'Saving...' : isEditing ? 'Save Changes' : 'Add Patient'}
+            {isSubmitting
+              ? "Saving..."
+              : isEditing
+                ? "Save Changes"
+                : "Add Patient"}
           </button>
         </div>
       </form>
     </Modal>
   );
 }
-

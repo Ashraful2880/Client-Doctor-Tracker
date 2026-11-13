@@ -1,41 +1,46 @@
 export interface Doctor {
   _id: string;
   name: string;
-  specialization: string;
-  hospital: string;
   phone: string;
   email: string;
-  patientCount: number;
+  hospital: string;
   createdAt: string;
   updatedAt: string;
+  patientCount: number;
+  specialization: string;
 }
 
 export interface DoctorOption {
   _id: string;
   name: string;
-  specialization: string;
   hospital: string;
+  specialization: string;
 }
 
 export interface DoctorQueryParams {
   page?: number;
   limit?: number;
   search?: string;
-  specialization?: string;
+  sortBy?: string;
+  endDate?: string;
   hospital?: string;
   startDate?: string;
-  endDate?: string;
-  sortBy?: string;
+  specialization?: string;
   sortOrder?: 'asc' | 'desc';
 }
 
 export interface CreateDoctorPayload {
   name: string;
-  specialization: string;
-  hospital: string;
   phone: string;
   email: string;
+  hospital: string;
+  specialization: string;
 }
 
 export type UpdateDoctorPayload = Partial<CreateDoctorPayload> & { id: string };
 
+export interface DoctorFormModalProps {
+  open: boolean;
+  onClose: () => void;
+  doctor?: Doctor | null;
+}

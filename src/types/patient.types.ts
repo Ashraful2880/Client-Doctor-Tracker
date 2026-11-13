@@ -4,41 +4,47 @@ export type Gender = 'Male' | 'Female' | 'Other';
 
 export interface Patient {
   _id: string;
-  name: string;
   age: number;
-  gender: Gender;
+  name: string;
   phone: string;
+  gender: Gender;
   email?: string;
-  condition: string;
   notes?: string;
-  doctorId: DoctorOption | string;
+  condition: string;
   createdAt: string;
   updatedAt: string;
+  doctorId: DoctorOption | string;
 }
 
 export interface PatientQueryParams {
   page?: number;
   limit?: number;
   search?: string;
-  condition?: string;
-  doctorId?: string;
   gender?: string;
-  startDate?: string;
-  endDate?: string;
   sortBy?: string;
+  endDate?: string;
+  doctorId?: string;
+  condition?: string;
+  startDate?: string;
   sortOrder?: 'asc' | 'desc';
 }
 
 export interface CreatePatientPayload {
-  name: string;
   age: number;
-  gender: Gender;
+  name: string;
   phone: string;
+  gender: Gender;
   email?: string;
-  condition: string;
   notes?: string;
   doctorId: string;
+  condition: string;
 }
 
 export type UpdatePatientPayload = Partial<CreatePatientPayload> & { id: string };
 
+export interface PatientFormModalProps {
+  open: boolean;
+  onClose: () => void;
+  patient?: Patient | null;
+  lockedDoctorId?: string;
+}

@@ -1,12 +1,15 @@
-import React from 'react';
-import { AuthGuard } from '@/components/layout/AuthGuard';
-import { AppShell } from '@/components/layout/AppShell';
+import React from "react";
+import { AppShell } from "@/components/layout/AppShell";
+import { AuthGuard } from "@/components/layout/AuthGuard";
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <AuthGuard>
       <AppShell>{children}</AppShell>
     </AuthGuard>
   );
 }
-

@@ -1,30 +1,32 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { Modal } from '@/components/shared/Modal';
-import { FormField, inputClassName } from '@/components/shared/FormField';
-import { SPECIALIZATIONS } from '@/utils/constants';
-import { Doctor } from '@/types/doctor.types';
-import { useCreateDoctorMutation, useUpdateDoctorMutation } from '@/store/api/doctorsApi';
-
-interface DoctorFormModalProps {
-  open: boolean;
-  onClose: () => void;
-  doctor?: Doctor | null;
-}
+import {
+  useCreateDoctorMutation,
+  useUpdateDoctorMutation,
+} from "@/store/api/doctorsApi";
+import { Modal } from "@/components/shared/Modal";
+import React, { useEffect, useState } from "react";
+import { SPECIALIZATIONS } from "@/utils/constants";
+import { DoctorFormModalProps } from "@/types/doctor.types";
+import { CustomSelect } from "@/components/shared/CustomSelect";
+import { FormField, inputClassName } from "@/components/shared/FormField";
 
 const initialForm = {
-  name: '',
-  specialization: 'Cardiology',
-  hospital: '',
-  phone: '',
-  email: '',
+  name: "",
+  phone: "",
+  email: "",
+  hospital: "",
+  specialization: "Cardiology",
 };
 
-export function DoctorFormModal({ open, onClose, doctor }: DoctorFormModalProps) {
+export function DoctorFormModal({
+  open,
+  onClose,
+  doctor,
+}: DoctorFormModalProps) {
   const isEditing = Boolean(doctor);
   const [form, setForm] = useState(initialForm);
-  const [errorMsg, setErrorMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState("");
 
   const [createDoctor, { isLoading: isCreating }] = useCreateDoctorMutation();
   const [updateDoctor, { isLoading: isUpdating }] = useUpdateDoctorMutation();
@@ -34,20 +36,20 @@ export function DoctorFormModal({ open, onClose, doctor }: DoctorFormModalProps)
     if (doctor) {
       setForm({
         name: doctor.name,
-        specialization: doctor.specialization,
-        hospital: doctor.hospital,
         phone: doctor.phone,
         email: doctor.email,
+        hospital: doctor.hospital,
+        specialization: doctor.specialization,
       });
     } else {
       setForm(initialForm);
     }
-    setErrorMsg('');
+    setErrorMsg("");
   }, [doctor, open]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrorMsg('');
+    setErrorMsg("");
 
     try {
       if (isEditing && doctor) {
@@ -58,7 +60,10 @@ export function DoctorFormModal({ open, onClose, doctor }: DoctorFormModalProps)
       onClose();
     } catch (err: unknown) {
       const apiErr = err as { data?: { message?: string } };
-      setErrorMsg(apiErr?.data?.message || 'Failed to save doctor. Please check your inputs.');
+      setErrorMsg(
+        apiErr?.data?.message ||
+          "Failed to save doctor. Please check your inputs.",
+      );
     }
   };
 
@@ -66,11 +71,11 @@ export function DoctorFormModal({ open, onClose, doctor }: DoctorFormModalProps)
     <Modal
       open={open}
       onClose={onClose}
-      title={isEditing ? 'Edit Doctor' : 'Add New Doctor'}
+      title={isEditing ? "Edit Doctor" : "Add New Doctor"}
       description={
         isEditing
-          ? 'Update doctor profile details.'
-          : 'Register a new doctor into the Care Guide portal.'
+          ? "Update doctor profile details."
+          : "Register a new doctor into the Care Guide portal."
       }
     >
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -82,44 +87,52 @@ export function DoctorFormModal({ open, onClose, doctor }: DoctorFormModalProps)
 
         <FormField label="Full Name" htmlFor="doctor-name" required>
           <input
-            id="doctor-name"
-            type="text"
             required
-            placeholder="e.g. Dr. Sarah Jenkins"
+            type="text"
+            id="doctor-name"
             value={form.name}
-            onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
             className={inputClassName}
+            placeholder="e.g. Dr. Sarah Jenkins"
+            onChange={(e) =>
+              setForm((prev) => ({ ...prev, name: e.target.value }))
+            }
           />
         </FormField>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <FormField label="Specialization" htmlFor="doctor-specialization" required>
-            <select
+          <FormField
+            label="Specialization"
+            htmlFor="doctor-specialization"
+            required
+          >
+            <CustomSelect
               id="doctor-specialization"
-              required
               value={form.specialization}
-              onChange={(e) =>
-                setForm((prev) => ({ ...prev, specialization: e.target.value }))
+              options={SPECIALIZATIONS.map((spec) => ({
+                label: spec,
+                value: spec,
+              }))}
+              onChange={(val) =>
+                setForm((prev) => ({ ...prev, specialization: val }))
               }
-              className={inputClassName}
-            >
-              {SPECIALIZATIONS.map((spec) => (
-                <option key={spec} value={spec}>
-                  {spec}
-                </option>
-              ))}
-            </select>
+            />
           </FormField>
 
-          <FormField label="Hospital / Clinic" htmlFor="doctor-hospital" required>
+          <FormField
+            label="Hospital / Clinic"
+            htmlFor="doctor-hospital"
+            required
+          >
             <input
-              id="doctor-hospital"
-              type="text"
               required
-              placeholder="e.g. Metro General Hospital"
+              type="text"
+              id="doctor-hospital"
               value={form.hospital}
-              onChange={(e) => setForm((prev) => ({ ...prev, hospital: e.target.value }))}
               className={inputClassName}
+              placeholder="e.g. Metro General Hospital"
+              onChange={(e) =>
+                setForm((prev) => ({ ...prev, hospital: e.target.value }))
+              }
             />
           </FormField>
         </div>
@@ -127,25 +140,29 @@ export function DoctorFormModal({ open, onClose, doctor }: DoctorFormModalProps)
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FormField label="Phone" htmlFor="doctor-phone" required>
             <input
-              id="doctor-phone"
-              type="text"
               required
-              placeholder="e.g. +1-555-0199"
+              type="text"
+              id="doctor-phone"
               value={form.phone}
-              onChange={(e) => setForm((prev) => ({ ...prev, phone: e.target.value }))}
               className={inputClassName}
+              placeholder="e.g. +1-555-0199"
+              onChange={(e) =>
+                setForm((prev) => ({ ...prev, phone: e.target.value }))
+              }
             />
           </FormField>
 
           <FormField label="Email" htmlFor="doctor-email" required>
             <input
-              id="doctor-email"
-              type="email"
               required
-              placeholder="e.g. doctor@careguide.com"
+              type="email"
+              id="doctor-email"
               value={form.email}
-              onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
               className={inputClassName}
+              placeholder="e.g. doctor@careguide.com"
+              onChange={(e) =>
+                setForm((prev) => ({ ...prev, email: e.target.value }))
+              }
             />
           </FormField>
         </div>
@@ -164,11 +181,14 @@ export function DoctorFormModal({ open, onClose, doctor }: DoctorFormModalProps)
             disabled={isSubmitting}
             className="rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-sky-700 disabled:opacity-60"
           >
-            {isSubmitting ? 'Saving...' : isEditing ? 'Save Changes' : 'Create Doctor'}
+            {isSubmitting
+              ? "Saving..."
+              : isEditing
+                ? "Save Changes"
+                : "Create Doctor"}
           </button>
         </div>
       </form>
     </Modal>
   );
 }
-

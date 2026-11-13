@@ -1,17 +1,12 @@
-import React from 'react';
-
-interface LoadingSkeletonProps {
-  variant?: 'table' | 'stat-grid' | 'chart' | 'detail';
-  rows?: number;
-  columns?: number;
-}
+import React from "react";
+import { LoadingSkeletonProps } from "@/types/InterfaceAll";
 
 export function LoadingSkeleton({
-  variant = 'table',
+  variant = "table",
   rows = 5,
   columns = 5,
 }: LoadingSkeletonProps) {
-  if (variant === 'stat-grid') {
+  if (variant === "stat-grid") {
     return (
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {Array.from({ length: 4 }).map((_, i) => (
@@ -31,7 +26,7 @@ export function LoadingSkeleton({
     );
   }
 
-  if (variant === 'chart') {
+  if (variant === "chart") {
     return (
       <div className="animate-pulse rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="h-5 w-44 rounded bg-slate-200" />
@@ -49,7 +44,7 @@ export function LoadingSkeleton({
     );
   }
 
-  if (variant === 'detail') {
+  if (variant === "detail") {
     return (
       <div className="animate-pulse rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -71,7 +66,10 @@ export function LoadingSkeleton({
   return (
     <div className="animate-pulse overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
       <div className="border-b border-slate-200 bg-slate-50 px-6 py-3.5">
-        <div className="grid gap-4" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}>
+        <div
+          className="grid gap-4"
+          style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
+        >
           {Array.from({ length: columns }).map((_, i) => (
             <div key={i} className="h-4 rounded bg-slate-200" />
           ))}
@@ -82,13 +80,15 @@ export function LoadingSkeleton({
           <div
             key={rowIdx}
             className="grid items-center gap-4 px-6 py-4"
-            style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
+            style={{
+              gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
+            }}
           >
             {Array.from({ length: columns }).map((_, colIdx) => (
               <div
                 key={colIdx}
                 className="h-4 rounded bg-slate-100"
-                style={{ width: colIdx === 0 ? '85%' : '70%' }}
+                style={{ width: colIdx === 0 ? "85%" : "70%" }}
               />
             ))}
           </div>
@@ -97,4 +97,3 @@ export function LoadingSkeleton({
     </div>
   );
 }
-

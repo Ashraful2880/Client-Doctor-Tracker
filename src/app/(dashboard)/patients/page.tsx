@@ -1,34 +1,34 @@
-'use client';
+"use client";
 
-import React, { useMemo, useState } from 'react';
-import Link from 'next/link';
-import { Pencil, Plus, Trash2 } from 'lucide-react';
-import { useDebounce } from '@/hooks/useDebounce';
-import { useGetDoctorOptionsQuery } from '@/store/api/doctorsApi';
 import {
-  useDeletePatientMutation,
   useGetPatientsQuery,
-} from '@/store/api/patientsApi';
-import { Patient } from '@/types/patient.types';
-import { GENDERS, PATIENT_CONDITIONS } from '@/utils/constants';
-import { formatDate, getDoctorName } from '@/utils/formatters';
-import { PageHeader } from '@/components/shared/PageHeader';
-import { FilterBar } from '@/components/shared/FilterBar';
-import { DataTable, TableColumn } from '@/components/shared/DataTable';
-import { StatusBadge } from '@/components/shared/StatusBadge';
-import { ConfirmDialog } from '@/components/shared/ConfirmDialog';
-import { PatientFormModal } from '@/components/features/patients/PatientFormModal';
+  useDeletePatientMutation,
+} from "@/store/api/patientsApi";
+import Link from "next/link";
+import { Patient } from "@/types/patient.types";
+import React, { useMemo, useState } from "react";
+import { useDebounce } from "@/hooks/useDebounce";
+import { TableColumn } from "@/types/InterfaceAll";
+import { Pencil, Plus, Trash2 } from "lucide-react";
+import { DataTable } from "@/components/shared/DataTable";
+import { FilterBar } from "@/components/shared/FilterBar";
+import { PageHeader } from "@/components/shared/PageHeader";
+import { StatusBadge } from "@/components/shared/StatusBadge";
+import { formatDate, getDoctorName } from "@/utils/formatters";
+import { GENDERS, PATIENT_CONDITIONS } from "@/utils/constants";
+import { useGetDoctorOptionsQuery } from "@/store/api/doctorsApi";
+import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
+import { PatientFormModal } from "@/components/features/patients/PatientFormModal";
 
 export default function PatientsPage() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [search, setSearch] = useState('');
-  const [condition, setCondition] = useState('');
-  const [doctorId, setDoctorId] = useState('');
-  const [gender, setGender] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-
+  const [search, setSearch] = useState("");
+  const [gender, setGender] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [doctorId, setDoctorId] = useState("");
+  const [condition, setCondition] = useState("");
+  const [startDate, setStartDate] = useState("");
   const [formModalOpen, setFormModalOpen] = useState(false);
   const [editingPatient, setEditingPatient] = useState<Patient | null>(null);
   const [deletingPatient, setDeletingPatient] = useState<Patient | null>(null);
@@ -38,30 +38,32 @@ export default function PatientsPage() {
   const { data: doctorOptionsRes } = useGetDoctorOptionsQuery();
   const doctorOptions = doctorOptionsRes?.data ?? [];
 
-  const { data, isLoading, isFetching, isError, refetch } = useGetPatientsQuery({
-    page,
-    limit,
-    ...(debouncedSearch && { search: debouncedSearch }),
-    ...(condition && { condition }),
-    ...(doctorId && { doctorId }),
-    ...(gender && { gender }),
-    ...(startDate && { startDate }),
-    ...(endDate && { endDate }),
-  });
+  const { data, isLoading, isFetching, isError, refetch } = useGetPatientsQuery(
+    {
+      page,
+      limit,
+      ...(debouncedSearch && { search: debouncedSearch }),
+      ...(condition && { condition }),
+      ...(doctorId && { doctorId }),
+      ...(gender && { gender }),
+      ...(startDate && { startDate }),
+      ...(endDate && { endDate }),
+    },
+  );
 
   const [deletePatient, { isLoading: isDeleting }] = useDeletePatientMutation();
 
   const hasActiveFilters = Boolean(
-    search || condition || doctorId || gender || startDate || endDate
+    search || condition || doctorId || gender || startDate || endDate,
   );
 
   const resetFilters = () => {
-    setSearch('');
-    setCondition('');
-    setDoctorId('');
-    setGender('');
-    setStartDate('');
-    setEndDate('');
+    setSearch("");
+    setCondition("");
+    setDoctorId("");
+    setGender("");
+    setStartDate("");
+    setEndDate("");
     setPage(1);
   };
 
@@ -74,8 +76,8 @@ export default function PatientsPage() {
   const columns: TableColumn<Patient>[] = useMemo(
     () => [
       {
-        key: 'name',
-        header: 'Patient',
+        key: "name",
+        header: "Patient",
         render: (p) => (
           <div>
             <p className="font-semibold text-slate-900">{p.name}</p>
@@ -86,15 +88,15 @@ export default function PatientsPage() {
         ),
       },
       {
-        key: 'condition',
-        header: 'Condition',
+        key: "condition",
+        header: "Condition",
         render: (p) => <StatusBadge label={p.condition} />,
       },
       {
-        key: 'doctor',
-        header: 'Assigned Doctor',
+        key: "doctor",
+        header: "Assigned Doctor",
         render: (p) => {
-          const docObj = typeof p.doctorId === 'string' ? null : p.doctorId;
+          const docObj = typeof p.doctorId === "string" ? null : p.doctorId;
           return docObj ? (
             <Link
               href={`/doctors/${docObj._id}`}
@@ -108,8 +110,8 @@ export default function PatientsPage() {
         },
       },
       {
-        key: 'contact',
-        header: 'Contact',
+        key: "contact",
+        header: "Contact",
         render: (p) => (
           <div>
             <p className="text-slate-700">{p.phone}</p>
@@ -118,16 +120,18 @@ export default function PatientsPage() {
         ),
       },
       {
-        key: 'createdAt',
-        header: 'Registered',
+        key: "createdAt",
+        header: "Registered",
         render: (p) => (
-          <span className="text-xs text-slate-500">{formatDate(p.createdAt)}</span>
+          <span className="text-xs text-slate-500">
+            {formatDate(p.createdAt)}
+          </span>
         ),
       },
       {
-        key: 'actions',
-        header: 'Actions',
-        className: 'text-right',
+        key: "actions",
+        header: "Actions",
+        className: "text-right",
         render: (p) => (
           <div className="flex items-center justify-end gap-1.5">
             <button
@@ -153,7 +157,7 @@ export default function PatientsPage() {
         ),
       },
     ],
-    []
+    [],
   );
 
   return (
@@ -185,8 +189,8 @@ export default function PatientsPage() {
         }}
         selectFilters={[
           {
-            id: 'condition-filter',
-            label: 'Condition',
+            id: "condition-filter",
+            label: "Condition",
             value: condition,
             options: PATIENT_CONDITIONS.map((c) => ({ label: c, value: c })),
             onChange: (val) => {
@@ -195,18 +199,21 @@ export default function PatientsPage() {
             },
           },
           {
-            id: 'doctor-filter',
-            label: 'Doctor',
+            id: "doctor-filter",
+            label: "Doctor",
             value: doctorId,
-            options: doctorOptions.map((d) => ({ label: d.name, value: d._id })),
+            options: doctorOptions.map((d) => ({
+              label: d.name,
+              value: d._id,
+            })),
             onChange: (val) => {
               setDoctorId(val);
               setPage(1);
             },
           },
           {
-            id: 'gender-filter',
-            label: 'Gender',
+            id: "gender-filter",
+            label: "Gender",
             value: gender,
             options: GENDERS.map((g) => ({ label: g, value: g })),
             onChange: (val) => {
@@ -231,19 +238,21 @@ export default function PatientsPage() {
 
       <DataTable
         columns={columns}
-        data={data?.data ?? []}
-        rowKey={(p) => p._id}
-        isLoading={isLoading}
-        isFetching={isFetching}
         isError={isError}
         onRetry={refetch}
+        meta={data?.meta}
+        rowKey={(p) => p._id}
+        isLoading={isLoading}
+        onPageChange={setPage}
+        data={data?.data ?? []}
+        isFetching={isFetching}
         emptyTitle="No Patients Found"
+        emptyActionLabel={hasActiveFilters ? "Reset Filters" : "Add Patient"}
         emptyDescription={
           hasActiveFilters
-            ? 'No patients match your current search or filter criteria.'
-            : 'No patients have been registered yet.'
+            ? "No patients match your current search or filter criteria."
+            : "No patients have been registered yet."
         }
-        emptyActionLabel={hasActiveFilters ? 'Reset Filters' : 'Add Patient'}
         onEmptyAction={
           hasActiveFilters
             ? resetFilters
@@ -252,8 +261,6 @@ export default function PatientsPage() {
                 setFormModalOpen(true);
               }
         }
-        meta={data?.meta}
-        onPageChange={setPage}
         onLimitChange={(newLimit) => {
           setLimit(newLimit);
           setPage(1);
@@ -262,22 +269,21 @@ export default function PatientsPage() {
 
       <PatientFormModal
         open={formModalOpen}
+        patient={editingPatient}
         onClose={() => {
           setFormModalOpen(false);
           setEditingPatient(null);
         }}
-        patient={editingPatient}
       />
 
       <ConfirmDialog
-        open={Boolean(deletingPatient)}
-        onClose={() => setDeletingPatient(null)}
-        onConfirm={handleConfirmDelete}
         title="Delete Patient"
-        message={`Are you sure you want to delete ${deletingPatient?.name ?? 'this patient'}? This action cannot be undone.`}
         isLoading={isDeleting}
+        open={Boolean(deletingPatient)}
+        onConfirm={handleConfirmDelete}
+        onClose={() => setDeletingPatient(null)}
+        message={`Are you sure you want to delete ${deletingPatient?.name ?? "this patient"}? This action cannot be undone.`}
       />
     </div>
   );
 }
-

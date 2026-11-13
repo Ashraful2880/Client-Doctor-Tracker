@@ -6,14 +6,14 @@ export interface DashboardAnalytics {
     totalSpecializations: number;
   };
   patientsPerDoctor: Array<{
-    doctorId: string;
     name: string;
-    specialization: string;
+    doctorId: string;
     patientCount: number;
+    specialization: string;
   }>;
   conditionDistribution: Array<{
-    condition: string;
     count: number;
+    condition: string;
   }>;
   dateStats: Array<{
     date: string;
@@ -23,7 +23,7 @@ export interface DashboardAnalytics {
 }
 
 export interface AnalyticsQueryParams {
-  startDate?: string;
   endDate?: string;
+  startDate?: string;
 }
 

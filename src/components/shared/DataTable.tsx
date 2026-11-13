@@ -1,54 +1,32 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { PaginationMeta } from '@/types/api.types';
-import { LoadingSkeleton } from './LoadingSkeleton';
-import { EmptyState } from './EmptyState';
-import { ErrorState } from './ErrorState';
-import { Pagination } from './Pagination';
-
-export interface TableColumn<T> {
-  key: string;
-  header: string;
-  className?: string;
-  render: (item: T) => React.ReactNode;
-}
-
-interface DataTableProps<T> {
-  columns: TableColumn<T>[];
-  data: T[];
-  rowKey: (item: T) => string;
-  isLoading?: boolean;
-  isFetching?: boolean;
-  isError?: boolean;
-  onRetry?: () => void;
-  emptyTitle?: string;
-  emptyDescription?: string;
-  emptyActionLabel?: string;
-  onEmptyAction?: () => void;
-  meta?: PaginationMeta;
-  onPageChange?: (page: number) => void;
-  onLimitChange?: (limit: number) => void;
-}
+import React from "react";
+import { EmptyState } from "./EmptyState";
+import { ErrorState } from "./ErrorState";
+import { Pagination } from "./Pagination";
+import { LoadingSkeleton } from "./LoadingSkeleton";
+import { DataTableProps } from "@/types/InterfaceAll";
 
 export function DataTable<T>({
-  columns,
   data,
+  meta,
   rowKey,
-  isLoading = false,
-  isFetching = false,
-  isError = false,
+  columns,
   onRetry,
   emptyTitle,
+  onPageChange,
+  onEmptyAction,
+  onLimitChange,
+  isError = false,
   emptyDescription,
   emptyActionLabel,
-  onEmptyAction,
-  meta,
-  onPageChange,
-  onLimitChange,
+  isLoading = false,
+  isFetching = false,
 }: DataTableProps<T>) {
-  if (isLoading) {
-    return <LoadingSkeleton variant="table" rows={6} columns={columns.length} />;
+  if (isLoading || isFetching) {
+    return (
+      <LoadingSkeleton variant="table" rows={6} columns={columns.length} />
+    );
   }
 
   if (isError) {
@@ -59,16 +37,18 @@ export function DataTable<T>({
     return (
       <EmptyState
         title={emptyTitle}
+        onAction={onEmptyAction}
         description={emptyDescription}
         actionLabel={emptyActionLabel}
-        onAction={onEmptyAction}
       />
     );
   }
 
   return (
     <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-      <div className={`overflow-x-auto transition-opacity ${isFetching ? 'opacity-65' : 'opacity-100'}`}>
+      <div
+        className={`overflow-x-auto transition-opacity ${isFetching ? "opacity-65" : "opacity-100"}`}
+      >
         <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
           <thead className="bg-slate-50">
             <tr>
@@ -76,7 +56,7 @@ export function DataTable<T>({
                 <th
                   key={col.key}
                   scope="col"
-                  className={`whitespace-nowrap px-4 py-3.5 text-xs font-semibold uppercase tracking-wider text-slate-600 sm:px-6 ${col.className ?? ''}`}
+                  className={`whitespace-nowrap px-4 py-3.5 text-xs font-semibold uppercase tracking-wider text-slate-600 sm:px-6 ${col.className ?? ""}`}
                 >
                   {col.header}
                 </th>
@@ -85,11 +65,14 @@ export function DataTable<T>({
           </thead>
           <tbody className="divide-y divide-slate-100 bg-white">
             {data.map((item) => (
-              <tr key={rowKey(item)} className="transition-colors hover:bg-slate-50/80">
+              <tr
+                key={rowKey(item)}
+                className="transition-colors hover:bg-slate-50/80"
+              >
                 {columns.map((col) => (
                   <td
                     key={col.key}
-                    className={`whitespace-nowrap px-4 py-3.5 text-slate-700 sm:px-6 ${col.className ?? ''}`}
+                    className={`whitespace-nowrap px-4 py-3.5 text-slate-700 sm:px-6 ${col.className ?? ""}`}
                   >
                     {col.render(item)}
                   </td>
@@ -101,9 +84,12 @@ export function DataTable<T>({
       </div>
 
       {meta && onPageChange && (
-        <Pagination meta={meta} onPageChange={onPageChange} onLimitChange={onLimitChange} />
+        <Pagination
+          meta={meta}
+          onPageChange={onPageChange}
+          onLimitChange={onLimitChange}
+        />
       )}
     </div>
   );
 }
-

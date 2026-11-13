@@ -1,31 +1,31 @@
-'use client';
+"use client";
 
-import React, { useMemo, useState } from 'react';
-import Link from 'next/link';
-import { Plus, Eye, Pencil, Trash2 } from 'lucide-react';
-import { useDebounce } from '@/hooks/useDebounce';
 import {
-  useDeleteDoctorMutation,
   useGetDoctorsQuery,
-} from '@/store/api/doctorsApi';
-import { Doctor } from '@/types/doctor.types';
-import { SPECIALIZATIONS } from '@/utils/constants';
-import { formatDate } from '@/utils/formatters';
-import { PageHeader } from '@/components/shared/PageHeader';
-import { FilterBar } from '@/components/shared/FilterBar';
-import { DataTable, TableColumn } from '@/components/shared/DataTable';
-import { StatusBadge } from '@/components/shared/StatusBadge';
-import { ConfirmDialog } from '@/components/shared/ConfirmDialog';
-import { DoctorFormModal } from '@/components/features/doctors/DoctorFormModal';
+  useDeleteDoctorMutation,
+} from "@/store/api/doctorsApi";
+import Link from "next/link";
+import { Doctor } from "@/types/doctor.types";
+import { formatDate } from "@/utils/formatters";
+import React, { useMemo, useState } from "react";
+import { useDebounce } from "@/hooks/useDebounce";
+import { TableColumn } from "@/types/InterfaceAll";
+import { SPECIALIZATIONS } from "@/utils/constants";
+import { Plus, Eye, Pencil, Trash2 } from "lucide-react";
+import { DataTable } from "@/components/shared/DataTable";
+import { FilterBar } from "@/components/shared/FilterBar";
+import { PageHeader } from "@/components/shared/PageHeader";
+import { StatusBadge } from "@/components/shared/StatusBadge";
+import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
+import { DoctorFormModal } from "@/components/features/doctors/DoctorFormModal";
 
 export default function DoctorsPage() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [search, setSearch] = useState('');
-  const [specialization, setSpecialization] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-
+  const [search, setSearch] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [specialization, setSpecialization] = useState("");
   const [formModalOpen, setFormModalOpen] = useState(false);
   const [editingDoctor, setEditingDoctor] = useState<Doctor | null>(null);
   const [deletingDoctor, setDeletingDoctor] = useState<Doctor | null>(null);
@@ -43,13 +43,15 @@ export default function DoctorsPage() {
 
   const [deleteDoctor, { isLoading: isDeleting }] = useDeleteDoctorMutation();
 
-  const hasActiveFilters = Boolean(search || specialization || startDate || endDate);
+  const hasActiveFilters = Boolean(
+    search || specialization || startDate || endDate,
+  );
 
   const resetFilters = () => {
-    setSearch('');
-    setSpecialization('');
-    setStartDate('');
-    setEndDate('');
+    setSearch("");
+    setSpecialization("");
+    setStartDate("");
+    setEndDate("");
     setPage(1);
   };
 
@@ -62,8 +64,8 @@ export default function DoctorsPage() {
   const columns: TableColumn<Doctor>[] = useMemo(
     () => [
       {
-        key: 'name',
-        header: 'Doctor',
+        key: "name",
+        header: "Doctor",
         render: (doc) => (
           <div>
             <Link
@@ -77,23 +79,23 @@ export default function DoctorsPage() {
         ),
       },
       {
-        key: 'specialization',
-        header: 'Specialization',
+        key: "specialization",
+        header: "Specialization",
         render: (doc) => <StatusBadge label={doc.specialization} />,
       },
       {
-        key: 'hospital',
-        header: 'Hospital',
+        key: "hospital",
+        header: "Hospital",
         render: (doc) => <span className="text-slate-700">{doc.hospital}</span>,
       },
       {
-        key: 'phone',
-        header: 'Phone',
+        key: "phone",
+        header: "Phone",
         render: (doc) => <span className="text-slate-600">{doc.phone}</span>,
       },
       {
-        key: 'patientCount',
-        header: 'Patients',
+        key: "patientCount",
+        header: "Patients",
         render: (doc) => (
           <Link
             href={`/doctors/${doc._id}`}
@@ -104,21 +106,23 @@ export default function DoctorsPage() {
         ),
       },
       {
-        key: 'createdAt',
-        header: 'Added',
+        key: "createdAt",
+        header: "Added",
         render: (doc) => (
-          <span className="text-xs text-slate-500">{formatDate(doc.createdAt)}</span>
+          <span className="text-xs text-slate-500">
+            {formatDate(doc.createdAt)}
+          </span>
         ),
       },
       {
-        key: 'actions',
-        header: 'Actions',
-        className: 'text-right',
+        key: "actions",
+        header: "Actions",
+        className: "text-right",
         render: (doc) => (
           <div className="flex items-center justify-end gap-1.5">
             <Link
-              href={`/doctors/${doc._id}`}
               title="View Patients"
+              href={`/doctors/${doc._id}`}
               className="rounded-lg p-1.5 text-slate-500 transition hover:bg-sky-50 hover:text-sky-600"
             >
               <Eye className="h-4 w-4" />
@@ -146,7 +150,7 @@ export default function DoctorsPage() {
         ),
       },
     ],
-    []
+    [],
   );
 
   return (
@@ -171,6 +175,10 @@ export default function DoctorsPage() {
 
       <FilterBar
         search={search}
+        endDate={endDate}
+        startDate={startDate}
+        onReset={resetFilters}
+        hasActiveFilters={hasActiveFilters}
         searchPlaceholder="Search by name, hospital, email, phone..."
         onSearchChange={(val) => {
           setSearch(val);
@@ -178,8 +186,8 @@ export default function DoctorsPage() {
         }}
         selectFilters={[
           {
-            id: 'specialization-filter',
-            label: 'Specialization',
+            id: "specialization-filter",
+            label: "Specialization",
             value: specialization,
             options: SPECIALIZATIONS.map((s) => ({ label: s, value: s })),
             onChange: (val) => {
@@ -188,8 +196,6 @@ export default function DoctorsPage() {
             },
           },
         ]}
-        startDate={startDate}
-        endDate={endDate}
         onStartDateChange={(val) => {
           setStartDate(val);
           setPage(1);
@@ -198,25 +204,25 @@ export default function DoctorsPage() {
           setEndDate(val);
           setPage(1);
         }}
-        hasActiveFilters={hasActiveFilters}
-        onReset={resetFilters}
       />
 
       <DataTable
         columns={columns}
-        data={data?.data ?? []}
-        rowKey={(doc) => doc._id}
-        isLoading={isLoading}
-        isFetching={isFetching}
         isError={isError}
         onRetry={refetch}
+        meta={data?.meta}
+        isLoading={isLoading}
+        onPageChange={setPage}
+        data={data?.data ?? []}
+        isFetching={isFetching}
+        rowKey={(doc) => doc._id}
         emptyTitle="No Doctors Found"
+        emptyActionLabel={hasActiveFilters ? "Reset Filters" : "Add Doctor"}
         emptyDescription={
           hasActiveFilters
-            ? 'No doctors match your current search or filter criteria.'
-            : 'Get started by registering your first doctor.'
+            ? "No doctors match your current search or filter criteria."
+            : "Get started by registering your first doctor."
         }
-        emptyActionLabel={hasActiveFilters ? 'Reset Filters' : 'Add Doctor'}
         onEmptyAction={
           hasActiveFilters
             ? resetFilters
@@ -225,8 +231,6 @@ export default function DoctorsPage() {
                 setFormModalOpen(true);
               }
         }
-        meta={data?.meta}
-        onPageChange={setPage}
         onLimitChange={(newLimit) => {
           setLimit(newLimit);
           setPage(1);
@@ -235,22 +239,21 @@ export default function DoctorsPage() {
 
       <DoctorFormModal
         open={formModalOpen}
+        doctor={editingDoctor}
         onClose={() => {
           setFormModalOpen(false);
           setEditingDoctor(null);
         }}
-        doctor={editingDoctor}
       />
 
       <ConfirmDialog
-        open={Boolean(deletingDoctor)}
-        onClose={() => setDeletingDoctor(null)}
-        onConfirm={handleConfirmDelete}
         title="Delete Doctor"
-        message={`Are you sure you want to delete ${deletingDoctor?.name ?? 'this doctor'}? This will also remove their assigned patient records.`}
         isLoading={isDeleting}
+        open={Boolean(deletingDoctor)}
+        onConfirm={handleConfirmDelete}
+        onClose={() => setDeletingDoctor(null)}
+        message={`Are you sure you want to delete ${deletingDoctor?.name ?? "this doctor"}? This will also remove their assigned patient records.`}
       />
     </div>
   );
 }
-

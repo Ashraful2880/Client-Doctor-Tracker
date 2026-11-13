@@ -1,21 +1,14 @@
-import React from 'react';
-import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
-
-interface PageHeaderProps {
-  title: string;
-  description?: string;
-  backHref?: string;
-  backLabel?: string;
-  actions?: React.ReactNode;
-}
+import React from "react";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import { PageHeaderProps } from "@/types/InterfaceAll";
 
 export function PageHeader({
   title,
-  description,
-  backHref,
-  backLabel = 'Back',
   actions,
+  backHref,
+  description,
+  backLabel = "Back",
 }: PageHeaderProps) {
   return (
     <div className="flex flex-col gap-4 border-b border-slate-200 pb-5 sm:flex-row sm:items-center sm:justify-between">
@@ -29,11 +22,16 @@ export function PageHeader({
             {backLabel}
           </Link>
         )}
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">{title}</h1>
-        {description && <p className="mt-1 text-sm text-slate-500">{description}</p>}
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+          {title}
+        </h1>
+        {description && (
+          <p className="mt-1 text-sm text-slate-500">{description}</p>
+        )}
       </div>
-      {actions && <div className="flex flex-wrap items-center gap-2.5">{actions}</div>}
+      {actions && (
+        <div className="flex flex-wrap items-center gap-2.5">{actions}</div>
+      )}
     </div>
   );
 }
-

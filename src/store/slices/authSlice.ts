@@ -1,14 +1,8 @@
-'use client';
+"use client";
 
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { User } from '@/types/auth.types';
-import { AUTH_TOKEN_KEY, AUTH_USER_KEY } from '@/utils/constants';
-
-interface AuthState {
-  user: User | null;
-  token: string | null;
-  hydrated: boolean;
-}
+import { AuthState, User } from "@/types/auth.types";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { AUTH_TOKEN_KEY, AUTH_USER_KEY } from "@/utils/constants";
 
 const initialState: AuthState = {
   user: null,
@@ -17,22 +11,28 @@ const initialState: AuthState = {
 };
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
-    setCredentials: (state, action: PayloadAction<{ user: User; accessToken: string }>) => {
+    setCredentials: (
+      state,
+      action: PayloadAction<{ user: User; accessToken: string }>,
+    ) => {
       state.user = action.payload.user;
       state.token = action.payload.accessToken;
       state.hydrated = true;
 
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         localStorage.setItem(AUTH_TOKEN_KEY, action.payload.accessToken);
-        localStorage.setItem(AUTH_USER_KEY, JSON.stringify(action.payload.user));
+        localStorage.setItem(
+          AUTH_USER_KEY,
+          JSON.stringify(action.payload.user),
+        );
         document.cookie = `${AUTH_TOKEN_KEY}=${action.payload.accessToken}; path=/; max-age=604800; SameSite=Lax`;
       }
     },
     hydrateAuth: (state) => {
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         const token = localStorage.getItem(AUTH_TOKEN_KEY);
         const userStr = localStorage.getItem(AUTH_USER_KEY);
         if (token && userStr) {
@@ -52,7 +52,7 @@ const authSlice = createSlice({
       state.token = null;
       state.hydrated = true;
 
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         localStorage.removeItem(AUTH_TOKEN_KEY);
         localStorage.removeItem(AUTH_USER_KEY);
         document.cookie = `${AUTH_TOKEN_KEY}=; path=/; max-age=0; SameSite=Lax`;
@@ -61,6 +61,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { setCredentials, hydrateAuth, clearCredentials } = authSlice.actions;
+export const { setCredentials, hydrateAuth, clearCredentials } =
+  authSlice.actions;
 export default authSlice.reducer;
-

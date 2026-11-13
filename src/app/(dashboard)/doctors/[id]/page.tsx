@@ -1,25 +1,26 @@
-'use client';
+"use client";
 
-import React, { useMemo, useState } from 'react';
-import { useParams } from 'next/navigation';
-import { Building2, Mail, Phone, Plus, Trash2, Users } from 'lucide-react';
-import { useDebounce } from '@/hooks/useDebounce';
-import { useGetDoctorByIdQuery } from '@/store/api/doctorsApi';
 import {
-  useDeletePatientMutation,
   useGetPatientsQuery,
-} from '@/store/api/patientsApi';
-import { Patient } from '@/types/patient.types';
-import { PATIENT_CONDITIONS } from '@/utils/constants';
-import { formatDate } from '@/utils/formatters';
-import { PageHeader } from '@/components/shared/PageHeader';
-import { FilterBar } from '@/components/shared/FilterBar';
-import { DataTable, TableColumn } from '@/components/shared/DataTable';
-import { LoadingSkeleton } from '@/components/shared/LoadingSkeleton';
-import { ErrorState } from '@/components/shared/ErrorState';
-import { StatusBadge } from '@/components/shared/StatusBadge';
-import { ConfirmDialog } from '@/components/shared/ConfirmDialog';
-import { PatientFormModal } from '@/components/features/patients/PatientFormModal';
+  useDeletePatientMutation,
+} from "@/store/api/patientsApi";
+import { useParams } from "next/navigation";
+import { Patient } from "@/types/patient.types";
+import { formatDate } from "@/utils/formatters";
+import React, { useMemo, useState } from "react";
+import { useDebounce } from "@/hooks/useDebounce";
+import { TableColumn } from "@/types/InterfaceAll";
+import { PATIENT_CONDITIONS } from "@/utils/constants";
+import { DataTable } from "@/components/shared/DataTable";
+import { FilterBar } from "@/components/shared/FilterBar";
+import { PageHeader } from "@/components/shared/PageHeader";
+import { ErrorState } from "@/components/shared/ErrorState";
+import { StatusBadge } from "@/components/shared/StatusBadge";
+import { useGetDoctorByIdQuery } from "@/store/api/doctorsApi";
+import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
+import { LoadingSkeleton } from "@/components/shared/LoadingSkeleton";
+import { Building2, Mail, Phone, Plus, Trash2, Users } from "lucide-react";
+import { PatientFormModal } from "@/components/features/patients/PatientFormModal";
 
 export default function DoctorDetailPage() {
   const params = useParams();
@@ -27,11 +28,10 @@ export default function DoctorDetailPage() {
 
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [search, setSearch] = useState('');
-  const [condition, setCondition] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-
+  const [search, setSearch] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [condition, setCondition] = useState("");
+  const [startDate, setStartDate] = useState("");
   const [addPatientOpen, setAddPatientOpen] = useState(false);
   const [deletingPatient, setDeletingPatient] = useState<Patient | null>(null);
 
@@ -65,10 +65,10 @@ export default function DoctorDetailPage() {
   const hasActiveFilters = Boolean(search || condition || startDate || endDate);
 
   const resetFilters = () => {
-    setSearch('');
-    setCondition('');
-    setStartDate('');
-    setEndDate('');
+    setSearch("");
+    setCondition("");
+    setStartDate("");
+    setEndDate("");
     setPage(1);
   };
 
@@ -81,8 +81,8 @@ export default function DoctorDetailPage() {
   const columns: TableColumn<Patient>[] = useMemo(
     () => [
       {
-        key: 'name',
-        header: 'Patient',
+        key: "name",
+        header: "Patient",
         render: (p) => (
           <div>
             <p className="font-semibold text-slate-900">{p.name}</p>
@@ -93,13 +93,13 @@ export default function DoctorDetailPage() {
         ),
       },
       {
-        key: 'condition',
-        header: 'Condition',
+        key: "condition",
+        header: "Condition",
         render: (p) => <StatusBadge label={p.condition} />,
       },
       {
-        key: 'contact',
-        header: 'Contact',
+        key: "contact",
+        header: "Contact",
         render: (p) => (
           <div>
             <p className="text-slate-700">{p.phone}</p>
@@ -108,16 +108,18 @@ export default function DoctorDetailPage() {
         ),
       },
       {
-        key: 'createdAt',
-        header: 'Registered',
+        key: "createdAt",
+        header: "Registered",
         render: (p) => (
-          <span className="text-xs text-slate-500">{formatDate(p.createdAt)}</span>
+          <span className="text-xs text-slate-500">
+            {formatDate(p.createdAt)}
+          </span>
         ),
       },
       {
-        key: 'actions',
-        header: 'Actions',
-        className: 'text-right',
+        key: "actions",
+        header: "Actions",
+        className: "text-right",
         render: (p) => (
           <button
             type="button"
@@ -130,16 +132,16 @@ export default function DoctorDetailPage() {
         ),
       },
     ],
-    []
+    [],
   );
 
   return (
     <div className="space-y-6">
       <PageHeader
-        title={doctor?.name ?? 'Doctor Details'}
-        description="View doctor profile and manage their assigned patients."
         backHref="/doctors"
         backLabel="Back to Doctors"
+        title={doctor?.name ?? "Doctor Details"}
+        description="View doctor profile and manage their assigned patients."
         actions={
           <button
             type="button"
@@ -164,7 +166,9 @@ export default function DoctorDetailPage() {
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <div className="flex flex-wrap items-center gap-2.5">
-                <h2 className="text-lg font-bold text-slate-900">{doctor.name}</h2>
+                <h2 className="text-lg font-bold text-slate-900">
+                  {doctor.name}
+                </h2>
                 <StatusBadge label={doctor.specialization} />
               </div>
               <p className="mt-1 text-xs text-slate-500">
@@ -196,16 +200,24 @@ export default function DoctorDetailPage() {
 
       <FilterBar
         search={search}
+        endDate={endDate}
+        startDate={startDate}
+        onReset={resetFilters}
+        hasActiveFilters={hasActiveFilters}
         searchPlaceholder="Search assigned patients by name, phone, condition..."
+        onStartDateChange={(val) => {
+          setStartDate(val);
+          setPage(1);
+        }}
         onSearchChange={(val) => {
           setSearch(val);
           setPage(1);
         }}
         selectFilters={[
           {
-            id: 'doctor-patient-condition',
-            label: 'Condition',
             value: condition,
+            label: "Condition",
+            id: "doctor-patient-condition",
             options: PATIENT_CONDITIONS.map((c) => ({ label: c, value: c })),
             onChange: (val) => {
               setCondition(val);
@@ -213,38 +225,32 @@ export default function DoctorDetailPage() {
             },
           },
         ]}
-        startDate={startDate}
-        endDate={endDate}
-        onStartDateChange={(val) => {
-          setStartDate(val);
-          setPage(1);
-        }}
         onEndDateChange={(val) => {
           setEndDate(val);
           setPage(1);
         }}
-        hasActiveFilters={hasActiveFilters}
-        onReset={resetFilters}
       />
 
       <DataTable
         columns={columns}
-        data={patientsRes?.data ?? []}
         rowKey={(p) => p._id}
-        isLoading={isPatientsLoading}
-        isFetching={isPatientsFetching}
+        onPageChange={setPage}
+        meta={patientsRes?.meta}
         isError={isPatientsError}
         onRetry={refetchPatients}
+        isLoading={isPatientsLoading}
+        data={patientsRes?.data ?? []}
         emptyTitle="No Patients Found"
+        isFetching={isPatientsFetching}
+        emptyActionLabel={hasActiveFilters ? "Reset Filters" : "Add Patient"}
         emptyDescription={
           hasActiveFilters
-            ? 'No patients match your search or filter criteria.'
-            : 'This doctor currently has no assigned patients.'
+            ? "No patients match your search or filter criteria."
+            : "This doctor currently has no assigned patients."
         }
-        emptyActionLabel={hasActiveFilters ? 'Reset Filters' : 'Add Patient'}
-        onEmptyAction={hasActiveFilters ? resetFilters : () => setAddPatientOpen(true)}
-        meta={patientsRes?.meta}
-        onPageChange={setPage}
+        onEmptyAction={
+          hasActiveFilters ? resetFilters : () => setAddPatientOpen(true)
+        }
         onLimitChange={(newLimit) => {
           setLimit(newLimit);
           setPage(1);
@@ -253,19 +259,18 @@ export default function DoctorDetailPage() {
 
       <PatientFormModal
         open={addPatientOpen}
-        onClose={() => setAddPatientOpen(false)}
         lockedDoctorId={doctorId}
+        onClose={() => setAddPatientOpen(false)}
       />
 
       <ConfirmDialog
-        open={Boolean(deletingPatient)}
-        onClose={() => setDeletingPatient(null)}
-        onConfirm={handleConfirmDelete}
         title="Remove Patient"
-        message={`Are you sure you want to remove ${deletingPatient?.name ?? 'this patient'} from ${doctor?.name ?? 'this doctor'}?`}
         isLoading={isDeleting}
+        open={Boolean(deletingPatient)}
+        onConfirm={handleConfirmDelete}
+        onClose={() => setDeletingPatient(null)}
+        message={`Are you sure you want to remove ${deletingPatient?.name ?? "this patient"} from ${doctor?.name ?? "this doctor"}?`}
       />
     </div>
   );
 }
-

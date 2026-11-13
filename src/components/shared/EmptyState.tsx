@@ -1,20 +1,13 @@
-import React from 'react';
-import { FileSearch } from 'lucide-react';
-
-interface EmptyStateProps {
-  title?: string;
-  description?: string;
-  icon?: React.ReactNode;
-  actionLabel?: string;
-  onAction?: () => void;
-}
+import React from "react";
+import { FileSearch } from "lucide-react";
+import { EmptyStateProps } from "@/types/InterfaceAll";
 
 export function EmptyState({
-  title = 'No Data Found',
-  description = 'There are no records matching your current criteria.',
   icon,
-  actionLabel,
   onAction,
+  actionLabel,
+  title = "No Data Found",
+  description = "There are no records matching your current criteria.",
 }: EmptyStateProps) {
   return (
     <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center">
@@ -35,4 +28,3 @@ export function EmptyState({
     </div>
   );
 }
-

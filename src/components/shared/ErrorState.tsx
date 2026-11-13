@@ -1,15 +1,10 @@
-import React from 'react';
-import { AlertCircle, RefreshCw } from 'lucide-react';
-
-interface ErrorStateProps {
-  title?: string;
-  message?: string;
-  onRetry?: () => void;
-}
+import React from "react";
+import { AlertCircle, RefreshCw } from "lucide-react";
+import { ErrorStateProps } from "@/types/InterfaceAll";
 
 export function ErrorState({
-  title = 'Something went wrong',
-  message = 'Unable to load records right now. Please try again.',
+  title = "Something went wrong",
+  message = "Unable to load records right now. Please try again.",
   onRetry,
 }: ErrorStateProps) {
   return (
@@ -32,4 +27,3 @@ export function ErrorState({
     </div>
   );
 }
-
