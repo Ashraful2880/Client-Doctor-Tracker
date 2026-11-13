@@ -135,7 +135,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {/* Fixed Desktop Sidebar */}
       <aside
         className={`fixed inset-y-0 left-0 z-40 hidden flex-col border-r border-slate-200 bg-white transition-all duration-200 lg:flex ${
-          collapsed ? "w-20" : "w-64"
+          collapsed ? "w-16" : "w-56"
         }`}
       >
         {/* Brand Header */}
@@ -287,18 +287,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {/* Main Column */}
       <div
         className={`flex min-h-screen flex-col transition-all duration-200 ${
-          collapsed ? "lg:pl-20" : "lg:pl-64"
+          collapsed ? "lg:pl-16" : "lg:pl-56"
         }`}
       >
         {/* Sticky / Fixed Topbar with Collapse Toggle & Breadcrumb */}
         <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-200 bg-white/95 px-4 backdrop-blur-md sm:px-6">
-          <div className="flex items-center gap-3">
+          <div className="flex min-w-0 items-center gap-2 sm:gap-3">
             {/* Mobile Menu Button */}
             <button
               type="button"
               aria-label="Open Navigation Menu"
               onClick={() => setMobileMenuOpen(true)}
-              className="rounded-lg border border-slate-200 p-2 text-slate-700 hover:bg-slate-100 lg:hidden"
+              className="shrink-0 rounded-lg border border-slate-200 p-2 text-slate-700 hover:bg-slate-100 lg:hidden"
             >
               <Menu className="h-4 w-4" />
             </button>
@@ -309,7 +309,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               onClick={() => setCollapsed((prev) => !prev)}
               title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
               aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-              className="hidden rounded-lg border border-slate-200 p-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 lg:inline-flex"
+              className="hidden shrink-0 rounded-lg border border-slate-200 p-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 lg:inline-flex"
             >
               {collapsed ? (
                 <PanelLeftOpen className="h-4 w-4" />
@@ -318,28 +318,28 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               )}
             </button>
 
-            <span className="hidden h-5 w-px bg-slate-200 sm:block" />
+            <span className="hidden h-5 w-px shrink-0 bg-slate-200 sm:block" />
 
             {/* Breadcrumb */}
             <nav
               aria-label="Breadcrumb"
-              className="flex items-center gap-1.5 text-xs sm:text-sm"
+              className="flex min-w-0 items-center gap-1 text-xs sm:gap-1.5 sm:text-sm"
             >
               {breadcrumbs.map((crumb, idx) => {
                 const isLast = idx === breadcrumbs.length - 1;
                 return (
                   <React.Fragment key={crumb.href + idx}>
                     {idx > 0 && (
-                      <ChevronRight className="h-3.5 w-3.5 text-slate-400" />
+                      <ChevronRight className="h-3.5 w-3.5 shrink-0 text-slate-400" />
                     )}
                     {isLast ? (
-                      <span className="font-semibold text-slate-900">
+                      <span className="truncate font-semibold text-slate-900">
                         {crumb.label}
                       </span>
                     ) : (
                       <Link
                         href={crumb.href}
-                        className="font-medium text-slate-500 transition hover:text-sky-600"
+                        className="shrink-0 font-medium text-slate-500 transition hover:text-sky-600"
                       >
                         {crumb.label}
                       </Link>
@@ -350,7 +350,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </nav>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
             <div className="hidden items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 sm:flex">
               <span className="h-2 w-2 rounded-full bg-emerald-500" />
               <span className="text-xs font-medium text-slate-700">
@@ -369,7 +369,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         </header>
 
-        <main className="w-full flex-1 p-4 sm:p-5">{children}</main>
+        <main className="w-full flex-1 px-4 pb-4 pt-3 sm:px-5 sm:pb-5 sm:pt-3">{children}</main>
       </div>
 
       <ConfirmDialog

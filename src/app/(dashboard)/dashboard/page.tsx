@@ -1,81 +1,101 @@
-'use client';
+"use client";
 
 import {
   Plus,
   Users,
   Layers,
   Activity,
+  RotateCcw,
   Stethoscope,
   ChevronRight,
-} from 'lucide-react';
-import Link from 'next/link';
-import React, { useState } from 'react';
-import { StatCard } from '@/components/shared/StatCard';
-import { FilterBar } from '@/components/shared/FilterBar';
-import { PageHeader } from '@/components/shared/PageHeader';
-import { ErrorState } from '@/components/shared/ErrorState';
-import { EmptyState } from '@/components/shared/EmptyState';
-import { useGetPatientsQuery } from '@/store/api/patientsApi';
-import { StatusBadge } from '@/components/shared/StatusBadge';
-import { formatDate, getDoctorName } from '@/utils/formatters';
-import { LoadingSkeleton } from '@/components/shared/LoadingSkeleton';
-import { useGetDashboardAnalyticsQuery } from '@/store/api/analyticsApi';
-import { AnalyticsCharts } from '@/components/features/dashboard/AnalyticsCharts';
+} from "lucide-react";
+import Link from "next/link";
+import React, { useState } from "react";
+import { StatCard } from "@/components/shared/StatCard";
+import { DatePicker } from "@/components/shared/DatePicker";
+import { PageHeader } from "@/components/shared/PageHeader";
+import { ErrorState } from "@/components/shared/ErrorState";
+import { EmptyState } from "@/components/shared/EmptyState";
+import { useGetPatientsQuery } from "@/store/api/patientsApi";
+import { StatusBadge } from "@/components/shared/StatusBadge";
+import { formatDate, getDoctorName } from "@/utils/formatters";
+import { LoadingSkeleton } from "@/components/shared/LoadingSkeleton";
+import { useGetDashboardAnalyticsQuery } from "@/store/api/analyticsApi";
+import { AnalyticsCharts } from "@/components/features/dashboard/AnalyticsCharts";
 
 export default function DashboardPage() {
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
-  const { data, isLoading, isFetching, isError, refetch } = useGetDashboardAnalyticsQuery({
-    ...(startDate && { startDate }),
-    ...(endDate && { endDate }),
-  });
-
-  const { data: recentPatientsRes, isLoading: isPatientsLoading, isFetching: isPatientsFetching } =
-    useGetPatientsQuery({
-      page: 1,
-      limit: 5,
+  const { data, isLoading, isFetching, isError, refetch } =
+    useGetDashboardAnalyticsQuery({
+      ...(startDate && { startDate }),
+      ...(endDate && { endDate }),
     });
+
+  const {
+    data: recentPatientsRes,
+    isLoading: isPatientsLoading,
+    isFetching: isPatientsFetching,
+  } = useGetPatientsQuery({
+    page: 1,
+    limit: 5,
+  });
 
   const analytics = data?.data;
   const recentPatients = recentPatientsRes?.data ?? [];
   const hasDateFilter = Boolean(startDate || endDate);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       <PageHeader
         title="Dashboard"
-        description="Real-time clinical insights across doctors, patients, and medical conditions."
         actions={
-          <>
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="w-36 sm:w-40">
+              <DatePicker
+                placeholder="From date"
+                value={startDate}
+                onChange={setStartDate}
+              />
+            </div>
+            <div className="w-36 sm:w-40">
+              <DatePicker
+                placeholder="To date"
+                value={endDate}
+                onChange={setEndDate}
+              />
+            </div>
+            {hasDateFilter && (
+              <button
+                type="button"
+                onClick={() => {
+                  setStartDate("");
+                  setEndDate("");
+                }}
+                title="Reset Date Filter"
+                className="inline-flex h-[38px] items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
+              >
+                <RotateCcw className="h-3.5 w-3.5" />
+                Reset
+              </button>
+            )}
             <Link
               href="/doctors"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-slate-700 shadow-xs transition hover:bg-slate-50"
+              className="inline-flex h-[38px] items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3.5 text-sm font-medium text-slate-700 shadow-xs transition hover:bg-slate-50"
             >
               <Stethoscope className="h-4 w-4 text-sky-600" />
               Doctors
             </Link>
             <Link
               href="/patients"
-              className="inline-flex items-center gap-1.5 rounded-xl bg-sky-600 px-3.5 py-2 text-sm font-medium text-white shadow-xs transition hover:bg-sky-700"
+              className="inline-flex h-[38px] items-center gap-1.5 rounded-md bg-sky-600 px-3.5 text-sm font-medium text-white shadow-xs transition hover:bg-sky-700"
             >
               <Plus className="h-4 w-4" />
               Manage Patients
             </Link>
-          </>
+          </div>
         }
-      />
-
-      <FilterBar
-        endDate={endDate}
-        startDate={startDate}
-        onEndDateChange={setEndDate}
-        onStartDateChange={setStartDate}
-        hasActiveFilters={hasDateFilter}
-        onReset={() => {
-          setStartDate('');
-          setEndDate('');
-        }}
       />
 
       {isLoading || isFetching ? (
@@ -189,7 +209,9 @@ export default function DashboardPage() {
                       {recentPatients.map((patient) => (
                         <tr key={patient._id} className="hover:bg-slate-50/70">
                           <td className="whitespace-nowrap px-5 py-3.5">
-                            <p className="font-semibold text-slate-900">{patient.name}</p>
+                            <p className="font-semibold text-slate-900">
+                              {patient.name}
+                            </p>
                             <p className="text-xs text-slate-500">
                               {patient.age} yrs &bull; {patient.gender}
                             </p>
@@ -214,7 +236,9 @@ export default function DashboardPage() {
             {/* Top Doctors */}
             <div className="rounded-2xl border border-slate-200 bg-white shadow-xs xl:col-span-4">
               <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
-                <h2 className="text-base font-bold text-slate-900">Top Doctors</h2>
+                <h2 className="text-base font-bold text-slate-900">
+                  Top Doctors
+                </h2>
                 <Link
                   href="/doctors"
                   className="inline-flex items-center gap-1 text-xs font-semibold text-sky-600 hover:text-sky-700"
@@ -235,10 +259,10 @@ export default function DashboardPage() {
                 <div className="divide-y divide-slate-100 p-2">
                   {analytics.patientsPerDoctor.slice(0, 5).map((doc) => {
                     const initials = doc.name
-                      .replace(/^Dr\.\s+/i, '')
-                      .split(' ')
+                      .replace(/^Dr\.\s+/i, "")
+                      .split(" ")
                       .map((p) => p[0])
-                      .join('')
+                      .join("")
                       .slice(0, 2)
                       .toUpperCase();
 

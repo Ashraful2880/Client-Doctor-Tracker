@@ -38,9 +38,9 @@ export function AnalyticsCharts({ analytics }: AnalyticsChartsProps) {
     analytics;
 
   return (
-    <div className="grid grid-cols-1 gap-5 xl:grid-cols-12">
+    <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-12">
       {/* Date-Based Registration Statistics (WowDash Sales Statistic style) */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs xl:col-span-6">
+      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs md:col-span-2 xl:col-span-5 2xl:col-span-6">
         <div className="mb-4 flex flex-wrap items-start justify-between gap-2">
           <div>
             <h2 className="text-base font-bold text-slate-900">
@@ -70,7 +70,7 @@ export function AnalyticsCharts({ analytics }: AnalyticsChartsProps) {
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart
                 data={dateStats}
-                margin={{ top: 8, right: 8, left: -20, bottom: 0 }}
+                margin={{ top: 8, right: 8, left: -20, bottom: 12 }}
               >
                 <defs>
                   <linearGradient id="patientsGrad" x1="0" y1="0" x2="0" y2="1">
@@ -133,7 +133,7 @@ export function AnalyticsCharts({ analytics }: AnalyticsChartsProps) {
       </div>
 
       {/* Patients per Doctor (WowDash Total Subscriber Bar style) */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs xl:col-span-3">
+      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs xl:col-span-4 2xl:col-span-3">
         <div className="mb-4">
           <h2 className="text-base font-bold text-slate-900">
             Patients / Doctor
