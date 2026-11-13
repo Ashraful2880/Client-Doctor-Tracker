@@ -15,7 +15,7 @@ export default function LoginPage() {
 
   const [errorMsg, setErrorMsg] = useState("");
   const [password, setPassword] = useState("Admin@123");
-  const [email, setEmail] = useState("admin@careguide.com");
+  const [email, setEmail] = useState("admin@dt.com");
 
   useEffect(() => {
     if (hydrated && token) {
@@ -75,7 +75,7 @@ export default function LoginPage() {
                 id="email"
                 type="email"
                 value={email}
-                placeholder="admin@careguide.com"
+                placeholder="admin@dt.com"
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full rounded-lg border border-slate-300 bg-white py-2.5 pl-9 pr-3 text-sm text-slate-900 focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/20"
               />
@@ -118,7 +118,7 @@ export default function LoginPage() {
           </p>
           <p className="mt-1">
             Email:{" "}
-            <code className="font-mono text-sky-700">admin@careguide.com</code>
+            <code className="font-mono text-sky-700">admin@dt.com</code>
           </p>
           <p>
             Password: <code className="font-mono text-sky-700">Admin@123</code>

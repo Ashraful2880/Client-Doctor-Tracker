@@ -38,7 +38,7 @@ export function ConfirmDialog({
           type="button"
           onClick={onClose}
           disabled={isLoading}
-          className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+          className="rounded-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
         >
           Cancel
         </button>
@@ -46,7 +46,7 @@ export function ConfirmDialog({
           type="button"
           onClick={onConfirm}
           disabled={isLoading}
-          className={`rounded-xl px-4 py-2 text-sm font-medium text-white shadow-xs transition disabled:opacity-60 ${
+          className={`rounded-md px-4 py-2 text-sm font-medium text-white shadow-xs transition disabled:opacity-60 ${
             isDanger
               ? "bg-rose-600 hover:bg-rose-700"
               : "bg-sky-600 hover:bg-sky-700"

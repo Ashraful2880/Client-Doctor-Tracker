@@ -226,7 +226,7 @@ export function PublicFooter() {
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
                   <Phone className="h-3.5 w-3.5" />
                 </span>
-                <span>+880 1974-200905</span>
+                <span>+880 1124-200905</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-sky-50 text-sky-600">

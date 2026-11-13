@@ -60,7 +60,7 @@ npm run dev
 ### 3. Access the Application
 - **Frontend Portal**: `http://localhost:3000`
 - **Backend API**: `http://localhost:5000/api/v1`
-- **Seeded Admin Login**: `admin@careguide.com` / `Admin@123`
+- **Seeded Admin Login**: `admin@dt.com` / `Admin@123`
 
 ---
 

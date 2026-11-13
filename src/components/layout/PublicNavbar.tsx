@@ -75,7 +75,7 @@ export function PublicNavbar() {
     <header
       className={`${isHome ? 'fixed inset-x-0 top-0' : 'sticky top-0'} z-40 border-b transition-all duration-300 ${
         scrolled || mobileNavOpen
-          ? 'border-slate-200/80 bg-white/90 shadow-sm backdrop-blur-md'
+          ? 'border-slate-200/80 bg-white/50 shadow-sm backdrop-blur-md'
           : isHome
             ? 'border-transparent bg-transparent'
             : 'border-transparent bg-sky-50/70 backdrop-blur-md'
