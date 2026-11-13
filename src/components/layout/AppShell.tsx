@@ -169,8 +169,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <input
                 type="text"
                 value={menuSearch}
+                placeholder="Search Menu..."
                 onChange={(e) => setMenuSearch(e.target.value)}
-                placeholder="Search menu..."
                 className="w-full rounded-md border border-slate-200 bg-slate-50/70 py-1.5 pl-8 pr-3 text-xs text-slate-800 placeholder:text-slate-400 focus:border-sky-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sky-500/20"
               />
             </div>
@@ -211,8 +211,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           ) : (
             <button
               type="button"
-              onClick={() => setLogoutModalOpen(true)}
               title="Sign Out"
+              onClick={() => setLogoutModalOpen(true)}
               className="flex w-full items-center justify-center rounded-xl border border-slate-200 p-2.5 text-slate-600 transition hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600"
             >
               <LogOut className="h-4 w-4" />
@@ -260,7 +260,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               </div>
             </div>
 
-            <nav className="flex-1 space-y-2 overflow-y-auto px-3 py-3">
+            <nav className="flex-1 space-y-2 overflow-y-auto px-3 pb-3">
               {renderNavGroups(false, () => setMobileMenuOpen(false))}
             </nav>
 
@@ -296,8 +296,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             {/* Mobile Menu Button */}
             <button
               type="button"
+              aria-label="Open Navigation Menu"
               onClick={() => setMobileMenuOpen(true)}
-              aria-label="Open navigation menu"
               className="rounded-lg border border-slate-200 p-2 text-slate-700 hover:bg-slate-100 lg:hidden"
             >
               <Menu className="h-4 w-4" />
@@ -307,8 +307,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <button
               type="button"
               onClick={() => setCollapsed((prev) => !prev)}
-              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
               title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
               className="hidden rounded-lg border border-slate-200 p-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 lg:inline-flex"
             >
               {collapsed ? (
@@ -359,8 +359,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </div>
             <button
               type="button"
-              onClick={() => setLogoutModalOpen(true)}
               title="Sign Out"
+              onClick={() => setLogoutModalOpen(true)}
               className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-600 transition hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600"
             >
               <LogOut className="h-3.5 w-3.5" />
@@ -373,14 +373,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </div>
 
       <ConfirmDialog
-        open={logoutModalOpen}
-        onClose={() => setLogoutModalOpen(false)}
-        onConfirm={handleConfirmLogout}
-        title="Confirm Sign Out"
-        message="Are you sure you want to sign out of the Doctor Tracker portal? You will need to sign in again to access your dashboard."
-        confirmLabel="Yes, Sign Out"
         tone="primary"
-      />
+        open={logoutModalOpen}
+        title="Confirm Sign Out"
+        confirmLabel="Yes, Sign Out"
+        onConfirm={handleConfirmLogout}
+        onClose={() => setLogoutModalOpen(false)}
+        message="Are you sure you want to sign out of the Doctor Tracker portal? You will need to sign in again to access your dashboard."
+        />
     </div>
   );
 }

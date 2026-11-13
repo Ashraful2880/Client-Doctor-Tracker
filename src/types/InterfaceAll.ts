@@ -141,3 +141,12 @@ export interface NavItem {
   group: "Overview" | "Management";
   icon: React.ComponentType<{ className?: string }>;
 }
+
+export interface ModalProps {
+  open: boolean;
+  title: string;
+  onClose: () => void;
+  description?: string;
+  maxWidthClass?: string;
+  children: React.ReactNode;
+}

@@ -5,7 +5,7 @@ import {
   useUpdatePatientMutation,
 } from "@/store/api/patientsApi";
 import { Modal } from "@/components/shared/Modal";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { CustomSelect } from "@/components/shared/CustomSelect";
 import { GENDERS, PATIENT_CONDITIONS } from "@/utils/constants";
 import { useGetDoctorOptionsQuery } from "@/store/api/doctorsApi";
@@ -22,7 +22,11 @@ export function PatientFormModal({
   const { data: doctorOptionsRes } = useGetDoctorOptionsQuery(undefined, {
     skip: !open,
   });
-  const doctorOptions = doctorOptionsRes?.data ?? [];
+  const doctorOptions = useMemo(
+    () => doctorOptionsRes?.data ?? [],
+    [doctorOptionsRes?.data]
+  );
+  const firstDoctorId = doctorOptions[0]?._id ?? "";
 
   const [form, setForm] = useState({
     name: "",
@@ -41,6 +45,8 @@ export function PatientFormModal({
   const isSubmitting = isCreating || isUpdating;
 
   useEffect(() => {
+    if (!open) return;
+
     if (patient) {
       const docId =
         typeof patient.doctorId === "string"
@@ -65,11 +71,11 @@ export function PatientFormModal({
         notes: "",
         gender: "Male",
         condition: "General",
-        doctorId: lockedDoctorId || doctorOptions[0]?._id || "",
+        doctorId: lockedDoctorId || firstDoctorId,
       });
     }
     setErrorMsg("");
-  }, [patient, open, lockedDoctorId, doctorOptions]);
+  }, [patient, open, lockedDoctorId, firstDoctorId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -113,7 +119,7 @@ export function PatientFormModal({
           : "Register a new patient and assign them to a doctor."
       }
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-3">
         {errorMsg && (
           <div className="rounded-lg border border-rose-200 bg-rose-50 px-3.5 py-2.5 text-sm text-rose-700">
             {errorMsg}
@@ -134,7 +140,7 @@ export function PatientFormModal({
           />
         </FormField>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <FormField label="Age" htmlFor="patient-age" required>
             <input
               min={0}
@@ -176,7 +182,7 @@ export function PatientFormModal({
           </FormField>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <FormField label="Phone" htmlFor="patient-phone" required>
             <input
               required

@@ -78,7 +78,7 @@ export function DoctorFormModal({
           : "Register a new doctor into the Care Guide portal."
       }
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-3">
         {errorMsg && (
           <div className="rounded-lg border border-rose-200 bg-rose-50 px-3.5 py-2.5 text-sm text-rose-700">
             {errorMsg}
@@ -99,7 +99,7 @@ export function DoctorFormModal({
           />
         </FormField>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <FormField
             label="Specialization"
             htmlFor="doctor-specialization"
@@ -137,7 +137,7 @@ export function DoctorFormModal({
           </FormField>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <FormField label="Phone" htmlFor="doctor-phone" required>
             <input
               required
