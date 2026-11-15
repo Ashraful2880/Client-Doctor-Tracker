@@ -1,128 +1,91 @@
-# Doctor Tracker — Clinical Administration Portal (Client)
+# Doctor Tracker (Client)
 
 ## Description
 
-Doctor Tracker is a secure, full-stack administrative web application designed to help healthcare coordinators manage doctors, their assigned patients, and clinical workload analytics from a single unified portal. Built with a decoupled **Next.js 15 (App Router)** frontend and a **Node.js / Express / MongoDB** RESTful backend, it delivers fast server-side pagination, debounced search and multi-criteria filtering, Bearer-token JWT authentication, a modern animated landing & contact experience, and interactive **Recharts** visualizations backed by MongoDB aggregation pipelines.
+Doctor Tracker is an admin portal for managing doctors, patient records, and clinic workloads in one place. I built the frontend with Next.js (App Router), Tailwind CSS, Redux Toolkit (RTK Query), and Recharts, backed by a separate Express and MongoDB REST API. Coordinators can search and filter doctors or patients by date, condition, and specialization, assign patients directly under a doctor, and track clinic activity through live charts.
 
----
+## Live Links & Demo Access
 
-## Live Deployment & Demo Credentials
+- **Live App (Vercel):** https://client-doctor-tracker.vercel.app
+- **API Server (Render):** https://server-doctor-tracker.onrender.com/api/v1
+- **Admin Login:** `admin@dt.com` / `Admin@123`
 
-- **Backend API (Render)**: `https://server-doctor-tracker.onrender.com/api/v1`
-- **Frontend (Vercel)**: Deployed via Vercel with `NEXT_PUBLIC_API_URL` connected to the Render API
-- **Seeded Admin Login**: `admin@dt.com` / `Admin@123`
-
----
+*(Note: The API runs on Render's free tier, so the first request after inactivity can take ~30–50 seconds to wake up.)*
 
 ## Setup Guide
 
-### Prerequisites
+### What You Need
+- Node.js v20+
+- npm v10+
+- Running instance of the [Doctor Tracker Server](https://github.com/Ashraful2880/Server-Doctor-Tracker) (or use the live Render API)
 
-- **Node.js** v20+ (tested on v22.14.0)
-- **MongoDB** (local instance or MongoDB Atlas connection string)
-- **npm** v10+
-
-### 1. Configure Environment Variables
-
-Copy the provided `.env.example` files in both `Server-Care-Guide/` and `Client-Care-Guide/`:
+### 1. Clone and install dependencies
 
 ```bash
-# Backend environment (in Server-Care-Guide)
-cp .env.example .env
+git clone https://github.com/Ashraful2880/Client-Doctor-Tracker.git
+cd Client-Doctor-Tracker
+npm install
+```
 
-# Frontend environment (in Client-Care-Guide)
+### 2. Set up environment variables
+
+Copy `.env.example` to `.env.local`:
+
+```bash
 cp .env.example .env.local
 ```
 
-**`Server-Care-Guide/.env.example`**
-
-```env
-PORT=5000
-NODE_ENV=development
-MONGODB_URI=mongodb://localhost:27017/doctor_tracker
-JWT_SECRET=change_this_to_a_long_random_secret_key
-JWT_EXPIRES_IN=7d
-CLIENT_URL=http://localhost:3000
-```
-
-**`Client-Care-Guide/.env.example`**
-
+`.env.example`:
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
 ```
 
-### 2. Install Dependencies & Seed the Database
+If you want to point your local frontend to the live Render backend instead, set `NEXT_PUBLIC_API_URL=https://server-doctor-tracker.onrender.com/api/v1`.
+
+### 3. Run locally
+
+Make sure the backend server is running and seeded (`npm run seed` in the server repo), then start the Next.js dev server:
 
 ```bash
-# In Server-Care-Guide
-npm install
-npm run seed
 npm run dev
 ```
 
-In a second terminal:
-
-```bash
-# In Client-Care-Guide
-npm install
-npm run dev
-```
-
-### 3. Access the Application
-
-- **Frontend Portal**: `http://localhost:3000`
-- **Backend API**: `http://localhost:5000/api/v1`
-- **Seeded Admin Login**: `admin@dt.com` / `Admin@123`
-
----
-
-## Key Frontend Features
-
-- **Public Landing & Contact Pages**: Responsive, animated landing page (`#specialisations`, `#about`, `#pricing`, `#faq`) with transparent-to-frosted scroll-spy navbar, light-variant footer, and dedicated `/contact` page.
-- **Protected Admin Portal**: Authenticated `/dashboard`, `/doctors`, `/doctors/[id]`, and `/patients` routes with collapsible sidebar (`AppShell`), breadcrumb topbar, and sign-out confirmation.
-- **Shared UI Primitives**: Reusable `PageHeader`, `FilterBar` (search + toggleable filter popover/panel), `CustomSelect`, `DatePicker`, `DataTable`, `Pagination`, `Modal`, and `ConfirmDialog`.
-- **Analytics & Charts**: Recharts area, bar, and donut visualizations for registration trends, patients per doctor, and patient condition distribution.
-
----
+Open `http://localhost:3000` in your browser and sign in with `admin@dt.com` / `Admin@123`.
 
 ## System Architecture
 
-Doctor Tracker follows a decoupled client-server architecture communicating over RESTful JSON endpoints (`/api/v1/*`) secured by JWT Bearer tokens:
+The client and server are two separate repositories communicating over REST (`/api/v1/*`):
 
-```mermaid
-flowchart LR
-    Browser["Next.js Client (App Router + RTK Query)"] -->|"HTTPS / REST + Bearer JWT"| Express["Express API Server"]
-    Express -->|"Zod Validation & Auth Middleware"| Services["Modular Services (Auth, Doctor, Patient, Analytics)"]
-    Services -->|"Indexed Queries & Aggregations"| MongoDB[("MongoDB")]
+```
+Browser (Next.js App Router + RTK Query)
+   │
+   │  HTTPS + Bearer JWT
+   ▼
+Express API Server (Helmet, CORS, Zod Validation)
+   │
+   ▼
+MongoDB Atlas (Indexed Queries + Aggregation Pipelines)
 ```
 
-1. **Client (`Client-Care-Guide/`)**: Next.js App Router pages compose reusable shared primitives. Redux Toolkit + RTK Query manages normalized API caching and automatic tag invalidation (`Doctor`, `Patient`, `Analytics`).
-2. **Server (`Server-Care-Guide/`)**: Express exposes modular routes under `/api/v1` (`auth`, `doctors`, `patients`, `analytics`). Requests pass through `helmet`, `cors`, `authenticate` (Bearer JWT verification), and `validate` (Zod schemas) before reaching service-layer Mongoose queries.
-3. **Database (MongoDB)**: Compound indexes on `specialization + createdAt`, `hospital + createdAt`, `doctorId + createdAt`, and `condition + createdAt` accelerate paginated filtering and aggregation pipelines.
-
----
+- **Pages & UI:** Public landing page (`/`), contact page (`/contact`), login (`/login`), and protected admin routes (`/dashboard`, `/doctors`, `/doctors/[id]`, `/patients`). Shared components (`FilterBar`, `DataTable`, `Pagination`, `Modal`, `CustomSelect`, `DatePicker`) keep the layout consistent across desktop and mobile.
+- **State & Caching:** Redux Toolkit manages auth state in `localStorage` and RTK Query handles API requests and cache invalidation.
+- **Auth Flow:** On login, the server returns a JWT token. Protected routes redirect unauthenticated users to `/login`, and RTK Query attaches the `Authorization: Bearer <token>` header automatically.
 
 ## Technical Decisions
 
-### 1. Why Redux Toolkit + RTK Query over Context API / Manual `useEffect` Fetching
+### 1. Using RTK Query instead of Context API + `useEffect`
+I chose Redux Toolkit with RTK Query because doctor counts, patient tables, and dashboard charts all depend on the same underlying data. When a patient is added or deleted, invalidating the `Patient`, `Doctor`, and `Analytics` tags updates every affected view automatically without manual refetch calls or prop drilling. It also gives consistent loading and error states across every table.
 
-- **Normalized Cache & Tag Invalidation**: Creating, updating, or deleting a patient automatically invalidates `Patient`, `Doctor`, and `Analytics` cache tags in `patientsApi.ts`, keeping doctor patient counts and dashboard charts synchronized without manual `refetch()` chains or prop drilling.
-- **Built-in Request Lifecycle**: RTK Query provides `isLoading` (initial skeleton state), `isFetching` (background page/filter transition), and `isError` states out of the box, which map directly to our shared `DataTable`, `LoadingSkeleton`, and `ErrorState` components.
-
-### 2. Why MongoDB Aggregation Pipelines + Compound Indexing for Analytics & Lists
-
-- **Single-Pass Workload Aggregation**: Rather than loading all doctors and patients into Node.js memory to count relationships, `analytics.service.ts` uses `$lookup` + `$group` + `$dateToString` pipelines so MongoDB computes `patientsPerDoctor`, `conditionDistribution`, and `dateStats` in parallel.
-- **Optimized List Queries**: Both `doctor.service.ts` and `patient.service.ts` run `.find().lean()` and `.countDocuments()` concurrently via `Promise.all()`, backed by compound indexes on filter + sort fields (`createdAt: -1`).
-
----
+### 2. Moving analytics and filtering to MongoDB instead of the client
+Rather than fetching all records and filtering or counting in React, pagination, regex search, date-range filters, and dashboard aggregations all run on the server. MongoDB computes patients-per-doctor (`$lookup`), condition counts (`$group`), and daily registration stats in a single pass, keeping payloads small even as records grow.
 
 ## Visual Evidence
 
-> Capture and place Desktop (`1440x900`) and Mobile (`390x844`) screenshots after running `npm run seed` and starting both servers:
+Desktop (`1440x900`) and mobile (`390x844`) views of the app:
 
-| View                                 | Desktop                                  | Mobile                                  |
-| :----------------------------------- | :--------------------------------------- | :-------------------------------------- |
-| **Landing & Contact**                | `docs/screenshots/landing-desktop.png`   | `docs/screenshots/landing-mobile.png`   |
-| **Dashboard (Analytics & Recharts)** | `docs/screenshots/dashboard-desktop.png` | `docs/screenshots/dashboard-mobile.png` |
-| **Doctors Management**               | `docs/screenshots/doctors-desktop.png`   | `docs/screenshots/doctors-mobile.png`   |
-| **Patients Management**              | `docs/screenshots/patients-desktop.png`  | `docs/screenshots/patients-mobile.png`  |
+| Screen | Desktop | Mobile |
+| :--- | :--- | :--- |
+| Landing Page | `docs/screenshots/landing-desktop.png` | `docs/screenshots/landing-mobile.png` |
+| Admin Dashboard | `docs/screenshots/dashboard-desktop.png` | `docs/screenshots/dashboard-mobile.png` |
+| Doctors List | `docs/screenshots/doctors-desktop.png` | `docs/screenshots/doctors-mobile.png` |
+| Patients List | `docs/screenshots/patients-desktop.png` | `docs/screenshots/patients-mobile.png` |
