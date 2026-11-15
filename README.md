@@ -17,6 +17,7 @@ Doctor Tracker is a secure, full-stack administrative web application designed t
 ## Setup Guide
 
 ### Prerequisites
+
 - **Node.js** v20+ (tested on v22.14.0)
 - **MongoDB** (local instance or MongoDB Atlas connection string)
 - **npm** v10+
@@ -34,6 +35,7 @@ cp .env.example .env.local
 ```
 
 **`Server-Care-Guide/.env.example`**
+
 ```env
 PORT=5000
 NODE_ENV=development
@@ -44,6 +46,7 @@ CLIENT_URL=http://localhost:3000
 ```
 
 **`Client-Care-Guide/.env.example`**
+
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
 ```
@@ -66,6 +69,7 @@ npm run dev
 ```
 
 ### 3. Access the Application
+
 - **Frontend Portal**: `http://localhost:3000`
 - **Backend API**: `http://localhost:5000/api/v1`
 - **Seeded Admin Login**: `admin@dt.com` / `Admin@123`
@@ -101,10 +105,12 @@ flowchart LR
 ## Technical Decisions
 
 ### 1. Why Redux Toolkit + RTK Query over Context API / Manual `useEffect` Fetching
+
 - **Normalized Cache & Tag Invalidation**: Creating, updating, or deleting a patient automatically invalidates `Patient`, `Doctor`, and `Analytics` cache tags in `patientsApi.ts`, keeping doctor patient counts and dashboard charts synchronized without manual `refetch()` chains or prop drilling.
 - **Built-in Request Lifecycle**: RTK Query provides `isLoading` (initial skeleton state), `isFetching` (background page/filter transition), and `isError` states out of the box, which map directly to our shared `DataTable`, `LoadingSkeleton`, and `ErrorState` components.
 
 ### 2. Why MongoDB Aggregation Pipelines + Compound Indexing for Analytics & Lists
+
 - **Single-Pass Workload Aggregation**: Rather than loading all doctors and patients into Node.js memory to count relationships, `analytics.service.ts` uses `$lookup` + `$group` + `$dateToString` pipelines so MongoDB computes `patientsPerDoctor`, `conditionDistribution`, and `dateStats` in parallel.
 - **Optimized List Queries**: Both `doctor.service.ts` and `patient.service.ts` run `.find().lean()` and `.countDocuments()` concurrently via `Promise.all()`, backed by compound indexes on filter + sort fields (`createdAt: -1`).
 
@@ -114,9 +120,9 @@ flowchart LR
 
 > Capture and place Desktop (`1440x900`) and Mobile (`390x844`) screenshots after running `npm run seed` and starting both servers:
 
-| View | Desktop | Mobile |
-| :--- | :--- | :--- |
-| **Landing & Contact** | `docs/screenshots/landing-desktop.png` | `docs/screenshots/landing-mobile.png` |
+| View                                 | Desktop                                  | Mobile                                  |
+| :----------------------------------- | :--------------------------------------- | :-------------------------------------- |
+| **Landing & Contact**                | `docs/screenshots/landing-desktop.png`   | `docs/screenshots/landing-mobile.png`   |
 | **Dashboard (Analytics & Recharts)** | `docs/screenshots/dashboard-desktop.png` | `docs/screenshots/dashboard-mobile.png` |
-| **Doctors Management** | `docs/screenshots/doctors-desktop.png` | `docs/screenshots/doctors-mobile.png` |
-| **Patients Management** | `docs/screenshots/patients-desktop.png` | `docs/screenshots/patients-mobile.png` |
+| **Doctors Management**               | `docs/screenshots/doctors-desktop.png`   | `docs/screenshots/doctors-mobile.png`   |
+| **Patients Management**              | `docs/screenshots/patients-desktop.png`  | `docs/screenshots/patients-mobile.png`  |
