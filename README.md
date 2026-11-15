@@ -1,8 +1,16 @@
-# Doctor Tracker — Clinical Administration Portal
+# Doctor Tracker — Clinical Administration Portal (Client)
 
 ## Description
 
-Doctor Tracker is a secure, full-stack administrative web application designed to help healthcare coordinators manage doctors, their assigned patients, and clinical workload analytics from a single unified portal. Built with a decoupled **Next.js (App Router)** frontend and a **Node.js / Express / MongoDB** RESTful backend, it delivers fast server-side pagination, debounced search and multi-criteria filtering, Bearer-token JWT authentication, and interactive **Recharts** visualizations backed by MongoDB aggregation pipelines.
+Doctor Tracker is a secure, full-stack administrative web application designed to help healthcare coordinators manage doctors, their assigned patients, and clinical workload analytics from a single unified portal. Built with a decoupled **Next.js 15 (App Router)** frontend and a **Node.js / Express / MongoDB** RESTful backend, it delivers fast server-side pagination, debounced search and multi-criteria filtering, Bearer-token JWT authentication, a modern animated landing & contact experience, and interactive **Recharts** visualizations backed by MongoDB aggregation pipelines.
+
+---
+
+## Live Deployment & Demo Credentials
+
+- **Backend API (Render)**: `https://server-doctor-tracker.onrender.com/api/v1`
+- **Frontend (Vercel)**: Deployed via Vercel with `NEXT_PUBLIC_API_URL` connected to the Render API
+- **Seeded Admin Login**: `admin@dt.com` / `Admin@123`
 
 ---
 
@@ -64,6 +72,15 @@ npm run dev
 
 ---
 
+## Key Frontend Features
+
+- **Public Landing & Contact Pages**: Responsive, animated landing page (`#specialisations`, `#about`, `#pricing`, `#faq`) with transparent-to-frosted scroll-spy navbar, light-variant footer, and dedicated `/contact` page.
+- **Protected Admin Portal**: Authenticated `/dashboard`, `/doctors`, `/doctors/[id]`, and `/patients` routes with collapsible sidebar (`AppShell`), breadcrumb topbar, and sign-out confirmation.
+- **Shared UI Primitives**: Reusable `PageHeader`, `FilterBar` (search + toggleable filter popover/panel), `CustomSelect`, `DatePicker`, `DataTable`, `Pagination`, `Modal`, and `ConfirmDialog`.
+- **Analytics & Charts**: Recharts area, bar, and donut visualizations for registration trends, patients per doctor, and patient condition distribution.
+
+---
+
 ## System Architecture
 
 Doctor Tracker follows a decoupled client-server architecture communicating over RESTful JSON endpoints (`/api/v1/*`) secured by JWT Bearer tokens:
@@ -75,8 +92,8 @@ flowchart LR
     Services -->|"Indexed Queries & Aggregations"| MongoDB[("MongoDB")]
 ```
 
-1. **Client (`client/`)**: Next.js App Router pages compose reusable shared primitives (`PageHeader`, `FilterBar`, `DataTable`, `Pagination`, `LoadingSkeleton`, `EmptyState`, `Modal`, `ConfirmDialog`). Redux Toolkit + RTK Query manages normalized API caching and automatic tag invalidation (`Doctor`, `Patient`, `Analytics`).
-2. **Server (`server/`)**: Express exposes modular routes under `/api/v1` (`auth`, `doctors`, `patients`, `analytics`). Requests pass through `helmet`, `cors`, `authenticate` (Bearer JWT verification), and `validate` (Zod schemas) before reaching service-layer Mongoose queries.
+1. **Client (`Client-Care-Guide/`)**: Next.js App Router pages compose reusable shared primitives. Redux Toolkit + RTK Query manages normalized API caching and automatic tag invalidation (`Doctor`, `Patient`, `Analytics`).
+2. **Server (`Server-Care-Guide/`)**: Express exposes modular routes under `/api/v1` (`auth`, `doctors`, `patients`, `analytics`). Requests pass through `helmet`, `cors`, `authenticate` (Bearer JWT verification), and `validate` (Zod schemas) before reaching service-layer Mongoose queries.
 3. **Database (MongoDB)**: Compound indexes on `specialization + createdAt`, `hospital + createdAt`, `doctorId + createdAt`, and `condition + createdAt` accelerate paginated filtering and aggregation pipelines.
 
 ---
@@ -99,7 +116,7 @@ flowchart LR
 
 | View | Desktop | Mobile |
 | :--- | :--- | :--- |
+| **Landing & Contact** | `docs/screenshots/landing-desktop.png` | `docs/screenshots/landing-mobile.png` |
 | **Dashboard (Analytics & Recharts)** | `docs/screenshots/dashboard-desktop.png` | `docs/screenshots/dashboard-mobile.png` |
 | **Doctors Management** | `docs/screenshots/doctors-desktop.png` | `docs/screenshots/doctors-mobile.png` |
 | **Patients Management** | `docs/screenshots/patients-desktop.png` | `docs/screenshots/patients-mobile.png` |
-
