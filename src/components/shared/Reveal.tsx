@@ -1,14 +1,9 @@
-'use client';
+"use client";
 
-import React, { useEffect, useRef, useState } from 'react';
+import { RevealProps } from "@/types/InterfaceAll";
+import React, { useEffect, useRef, useState } from "react";
 
-interface RevealProps {
-  children: React.ReactNode;
-  delayMs?: number;
-  className?: string;
-}
-
-export function Reveal({ children, delayMs = 0, className = '' }: RevealProps) {
+export function Reveal({ children, delayMs = 0, className = "" }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 
@@ -23,7 +18,7 @@ export function Reveal({ children, delayMs = 0, className = '' }: RevealProps) {
           observer.disconnect();
         }
       },
-      { threshold: 0.12 }
+      { threshold: 0.12 },
     );
 
     observer.observe(el);
@@ -35,11 +30,10 @@ export function Reveal({ children, delayMs = 0, className = '' }: RevealProps) {
       ref={ref}
       style={{ transitionDelay: `${delayMs}ms` }}
       className={`transition-all duration-500 ease-out will-change-transform ${
-        visible ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'
+        visible ? "translate-y-0 opacity-100" : "translate-y-5 opacity-0"
       } ${className}`}
     >
       {children}
     </div>
   );
 }
-

@@ -1,47 +1,29 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { ChevronDown, Filter, RotateCcw, Search, X } from 'lucide-react';
-import { CustomSelect } from './CustomSelect';
-import { DatePicker } from './DatePicker';
-
-export interface SelectFilterConfig {
-  id: string;
-  label: string;
-  value: string;
-  options: Array<{ label: string; value: string }>;
-  onChange: (value: string) => void;
-}
-
-interface FilterBarProps {
-  search?: string;
-  searchPlaceholder?: string;
-  onSearchChange?: (value: string) => void;
-  selectFilters?: SelectFilterConfig[];
-  startDate?: string;
-  endDate?: string;
-  onStartDateChange?: (value: string) => void;
-  onEndDateChange?: (value: string) => void;
-  onReset?: () => void;
-  hasActiveFilters?: boolean;
-}
+import React, { useState } from "react";
+import { DatePicker } from "./DatePicker";
+import { CustomSelect } from "./CustomSelect";
+import { FilterBarProps } from "@/types/InterfaceAll";
+import { ChevronDown, Filter, RotateCcw, Search, X } from "lucide-react";
 
 export function FilterBar({
   search,
-  searchPlaceholder = 'Search...',
-  onSearchChange,
-  selectFilters = [],
-  startDate,
   endDate,
-  onStartDateChange,
-  onEndDateChange,
   onReset,
+  startDate,
+  onSearchChange,
+  onEndDateChange,
+  onStartDateChange,
+  selectFilters = [],
   hasActiveFilters = false,
+  searchPlaceholder = "Search...",
 }: FilterBarProps) {
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   const hasFilterControls =
-    selectFilters.length > 0 || Boolean(onStartDateChange) || Boolean(onEndDateChange);
+    selectFilters.length > 0 ||
+    Boolean(onStartDateChange) ||
+    Boolean(onEndDateChange);
 
   const activeFilterCount =
     selectFilters.filter((f) => Boolean(f.value)).length +
@@ -61,7 +43,7 @@ export function FilterBar({
                 </label>
                 <DatePicker
                   placeholder="From date"
-                  value={startDate ?? ''}
+                  value={startDate ?? ""}
                   onChange={onStartDateChange}
                 />
               </div>
@@ -73,7 +55,7 @@ export function FilterBar({
                 </label>
                 <DatePicker
                   placeholder="To date"
-                  value={endDate ?? ''}
+                  value={endDate ?? ""}
                   onChange={onEndDateChange}
                 />
               </div>
@@ -104,16 +86,16 @@ export function FilterBar({
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
-              value={search ?? ''}
-              onChange={(e) => onSearchChange(e.target.value)}
+              value={search ?? ""}
               placeholder={searchPlaceholder}
+              onChange={(e) => onSearchChange(e.target.value)}
               className="w-full rounded-md border border-slate-200 bg-white py-2 pl-9 pr-8 text-sm text-slate-900 placeholder:text-slate-400 focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/20"
             />
             {search && (
               <button
                 type="button"
                 aria-label="Clear search"
-                onClick={() => onSearchChange('')}
+                onClick={() => onSearchChange("")}
                 className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded p-0.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
               >
                 <X className="h-3.5 w-3.5" />
@@ -137,12 +119,12 @@ export function FilterBar({
           {hasFilterControls && (
             <button
               type="button"
-              onClick={() => setFiltersOpen((prev) => !prev)}
               aria-expanded={filtersOpen}
+              onClick={() => setFiltersOpen((prev) => !prev)}
               className={`inline-flex h-[38px] items-center gap-2 rounded-md border px-3.5 text-sm font-medium transition ${
                 filtersOpen || activeFilterCount > 0
-                  ? 'border-sky-600 bg-sky-600 text-white shadow-xs hover:bg-sky-700'
-                  : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
+                  ? "border-sky-600 bg-sky-600 text-white shadow-xs hover:bg-sky-700"
+                  : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
               }`}
             >
               <Filter className="h-4 w-4" />
@@ -151,8 +133,8 @@ export function FilterBar({
                 <span
                   className={`inline-flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-[11px] font-bold ${
                     filtersOpen || activeFilterCount > 0
-                      ? 'bg-white text-sky-700'
-                      : 'bg-sky-100 text-sky-700'
+                      ? "bg-white text-sky-700"
+                      : "bg-sky-100 text-sky-700"
                   }`}
                 >
                   {activeFilterCount}
@@ -160,7 +142,7 @@ export function FilterBar({
               )}
               <ChevronDown
                 className={`h-4 w-4 transition-transform duration-200 ${
-                  filtersOpen ? 'rotate-180' : ''
+                  filtersOpen ? "rotate-180" : ""
                 }`}
               />
             </button>
@@ -181,8 +163,8 @@ export function FilterBar({
                   {filter.label}
                 </label>
                 <CustomSelect
-                  includeAllOption
                   id={filter.id}
+                  includeAllOption
                   value={filter.value}
                   options={filter.options}
                   onChange={filter.onChange}
@@ -198,7 +180,7 @@ export function FilterBar({
                 </label>
                 <DatePicker
                   placeholder="From date"
-                  value={startDate ?? ''}
+                  value={startDate ?? ""}
                   onChange={onStartDateChange}
                 />
               </div>
@@ -211,7 +193,7 @@ export function FilterBar({
                 </label>
                 <DatePicker
                   placeholder="To date"
-                  value={endDate ?? ''}
+                  value={endDate ?? ""}
                   onChange={onEndDateChange}
                 />
               </div>

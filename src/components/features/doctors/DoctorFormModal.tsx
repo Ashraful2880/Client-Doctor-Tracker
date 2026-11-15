@@ -119,9 +119,9 @@ export function DoctorFormModal({
           </FormField>
 
           <FormField
+            required
             label="Hospital / Clinic"
             htmlFor="doctor-hospital"
-            required
           >
             <input
               required

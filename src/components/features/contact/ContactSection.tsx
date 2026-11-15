@@ -1,56 +1,23 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import {
-  CheckCircle2,
-  Headphones,
-  Mail,
-  MapPin,
-  MessageCircle,
-  Send,
-} from 'lucide-react';
-import { FormField, inputClassName } from '@/components/shared/FormField';
-
-const CONTACT_CHANNELS = [
-  {
-    title: 'Email Support',
-    subtitle: 'Our team can help you at',
-    value: 'support@careguide.com',
-    icon: Mail,
-  },
-  {
-    title: 'Call Center',
-    subtitle: 'Available 24/7 for clinical teams',
-    value: '+1 (555) 234-8900',
-    icon: Headphones,
-  },
-  {
-    title: 'Our Office',
-    subtitle: 'Main Clinical Operations Hub',
-    value: '420 Care Guide Plaza, Suite 300, Metro Medical District',
-    icon: MapPin,
-  },
-  {
-    title: 'WhatsApp Support',
-    subtitle: 'Chat directly with our specialists',
-    value: '+1 (555) 234-8905',
-    icon: MessageCircle,
-  },
-];
+import React, { useState } from "react";
+import { Send, CheckCircle2 } from "lucide-react";
+import { CONTACT_CHANNELS } from "@/components/shared/AllOptions";
+import { FormField, inputClassName } from "@/components/shared/FormField";
 
 export function ContactSection() {
   const [form, setForm] = useState({
-    fullName: '',
-    phone: '',
-    subject: '',
-    message: '',
+    phone: "",
+    subject: "",
+    message: "",
+    fullName: "",
   });
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
-    setForm({ fullName: '', phone: '', subject: '', message: '' });
+    setForm({ fullName: "", phone: "", subject: "", message: "" });
   };
 
   return (
@@ -64,8 +31,8 @@ export function ContactSection() {
           Have any Questions?
         </h1>
         <p className="mt-2.5 text-sm leading-relaxed text-slate-600 sm:text-base">
-          We&apos;re here to help and answer any question you might have about DoctorTracker,
-          clinic onboarding, or enterprise deployments.
+          We&apos;re here to help and answer any question you might have about
+          DoctorTracker, clinic onboarding, or enterprise deployments.
         </p>
       </div>
 
@@ -83,9 +50,15 @@ export function ContactSection() {
                   <Icon className="h-5 w-5" />
                 </div>
                 <div>
-                  <h2 className="text-sm font-bold text-slate-900">{item.title}</h2>
-                  <p className="mt-0.5 text-xs text-slate-500">{item.subtitle}</p>
-                  <p className="mt-1 text-xs font-semibold text-slate-800">{item.value}</p>
+                  <h2 className="text-sm font-bold text-slate-900">
+                    {item.title}
+                  </h2>
+                  <p className="mt-0.5 text-xs text-slate-500">
+                    {item.subtitle}
+                  </p>
+                  <p className="mt-1 text-xs font-semibold text-slate-800">
+                    {item.value}
+                  </p>
                 </div>
               </div>
             );
@@ -100,7 +73,8 @@ export function ContactSection() {
               <div>
                 <p className="font-semibold">Message received!</p>
                 <p className="mt-0.5 text-xs text-emerald-700">
-                  Thank you for reaching out. Our clinical support team will respond shortly.
+                  Thank you for reaching out. Our clinical support team will
+                  respond shortly.
                 </p>
               </div>
             </div>
@@ -110,58 +84,58 @@ export function ContactSection() {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <FormField label="Full Name" htmlFor="contact-name" required>
                 <input
-                  id="contact-name"
-                  type="text"
                   required
-                  placeholder="John Doe"
+                  type="text"
+                  id="contact-name"
                   value={form.fullName}
+                  placeholder="John Doe"
+                  className={inputClassName}
                   onChange={(e) =>
                     setForm((prev) => ({ ...prev, fullName: e.target.value }))
                   }
-                  className={inputClassName}
                 />
               </FormField>
 
               <FormField label="Phone Number" htmlFor="contact-phone" required>
                 <input
-                  id="contact-phone"
-                  type="text"
                   required
-                  placeholder="+1 (555) 000-0000"
+                  type="text"
+                  id="contact-phone"
                   value={form.phone}
+                  className={inputClassName}
+                  placeholder="+1 (555) 000-0000"
                   onChange={(e) =>
                     setForm((prev) => ({ ...prev, phone: e.target.value }))
                   }
-                  className={inputClassName}
                 />
               </FormField>
             </div>
 
             <FormField label="Subject" htmlFor="contact-subject" required>
               <input
-                id="contact-subject"
-                type="text"
                 required
-                placeholder="How can we help?"
+                type="text"
+                id="contact-subject"
                 value={form.subject}
+                className={inputClassName}
+                placeholder="How can we help?"
                 onChange={(e) =>
                   setForm((prev) => ({ ...prev, subject: e.target.value }))
                 }
-                className={inputClassName}
               />
             </FormField>
 
             <FormField label="Message" htmlFor="contact-message" required>
               <textarea
-                id="contact-message"
                 rows={4}
                 required
-                placeholder="Type your question here..."
+                id="contact-message"
                 value={form.message}
+                className={inputClassName}
+                placeholder="Type your question here..."
                 onChange={(e) =>
                   setForm((prev) => ({ ...prev, message: e.target.value }))
                 }
-                className={inputClassName}
               />
             </FormField>
 
@@ -178,4 +152,3 @@ export function ContactSection() {
     </section>
   );
 }
-

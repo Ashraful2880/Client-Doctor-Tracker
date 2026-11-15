@@ -67,7 +67,7 @@ Express API Server (Helmet, CORS, Zod Validation)
 MongoDB Atlas (Indexed Queries + Aggregation Pipelines)
 ```
 
-- **Pages & UI:** Public landing page (`/`), contact page (`/contact`), login (`/login`), and protected admin routes (`/dashboard`, `/doctors`, `/doctors/[id]`, `/patients`). Shared components (`FilterBar`, `DataTable`, `Pagination`, `Modal`, `CustomSelect`, `DatePicker`) keep the layout consistent across desktop and mobile.
+- **Pages & UI:** Public landing page (`/`), contact page (`/contact`), login (`/login`), register (`/register`), and protected admin routes (`/dashboard`, `/doctors`, `/doctors/[id]`, `/patients`). Shared components (`FilterBar`, `DataTable`, `Pagination`, `Modal`, `CustomSelect`, `DatePicker`) keep the layout consistent across desktop and mobile.
 - **State & Caching:** Redux Toolkit manages auth state in `localStorage` and RTK Query handles API requests and cache invalidation.
 - **Auth Flow:** On login, the server returns a JWT token. Protected routes redirect unauthenticated users to `/login`, and RTK Query attaches the `Authorization: Bearer <token>` header automatically.
 

@@ -1,50 +1,29 @@
-'use client';
+"use client";
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
-import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, X } from 'lucide-react';
-
-interface DatePickerProps {
-  id?: string;
-  value: string; // YYYY-MM-DD
-  onChange: (value: string) => void;
-  placeholder?: string;
-  className?: string;
-}
-
-interface PopoverCoords {
-  top: number;
-  left: number;
-  openUpward: boolean;
-}
-
-const WEEKDAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-const MONTHS = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
-];
-
-const toIsoDate = (year: number, month: number, day: number): string =>
-  `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-
-const formatDisplay = (iso: string): string => {
-  if (!iso) return '';
-  const [y, m, d] = iso.split('-').map(Number);
-  if (!y || !m || !d) return iso;
-  const date = new Date(y, m - 1, d);
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(date);
-};
+import React, {
+  useRef,
+  useMemo,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
+import {
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Calendar as CalendarIcon,
+} from "lucide-react";
+import { createPortal } from "react-dom";
+import { MONTHS, WEEKDAYS } from "./AllOptions";
+import { formatDisplay, toIsoDate } from "@/utils/formatters";
+import { DatePickerProps, PopoverCoords } from "@/types/InterfaceAll";
 
 export function DatePicker({
   id,
   value,
   onChange,
-  placeholder = 'Select date',
-  className = '',
+  className = "",
+  placeholder = "Select date",
 }: DatePickerProps) {
   const [open, setOpen] = useState(false);
   const [coords, setCoords] = useState<PopoverCoords | null>(null);
@@ -53,7 +32,7 @@ export function DatePicker({
 
   const initialDate = useMemo(() => {
     if (value) {
-      const [y, m] = value.split('-').map(Number);
+      const [y, m] = value.split("-").map(Number);
       if (y && m) return { year: y, month: m - 1 };
     }
     const now = new Date();
@@ -71,7 +50,7 @@ export function DatePicker({
     const openUpward = spaceBelow < 320 && rect.top > 320;
     const clampedLeft = Math.min(
       Math.max(12, rect.left),
-      Math.max(12, window.innerWidth - popoverWidth - 12)
+      Math.max(12, window.innerWidth - popoverWidth - 12),
     );
 
     setCoords({
@@ -105,20 +84,20 @@ export function DatePicker({
       }
     };
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(false);
+      if (e.key === "Escape") setOpen(false);
     };
     const handleReposition = () => updatePosition();
 
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('resize', handleReposition);
-    window.addEventListener('scroll', handleReposition, true);
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("resize", handleReposition);
+    window.addEventListener("scroll", handleReposition, true);
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('resize', handleReposition);
-      window.removeEventListener('scroll', handleReposition, true);
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("resize", handleReposition);
+      window.removeEventListener("scroll", handleReposition, true);
     };
   }, [open, updatePosition]);
 
@@ -126,7 +105,11 @@ export function DatePicker({
   const firstDayOfWeek = new Date(viewYear, viewMonth, 1).getDay();
 
   const today = new Date();
-  const todayIso = toIsoDate(today.getFullYear(), today.getMonth(), today.getDate());
+  const todayIso = toIsoDate(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate(),
+  );
 
   const prevMonth = () => {
     if (viewMonth === 0) {
@@ -154,20 +137,22 @@ export function DatePicker({
         tabIndex={0}
         onClick={toggleOpen}
         onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
+          if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
             toggleOpen();
           }
         }}
         className={`flex w-full cursor-pointer items-center justify-between gap-2 rounded-md border bg-white px-3 py-2 text-sm transition ${
           open
-            ? 'border-sky-500 ring-2 ring-sky-500/20'
-            : 'border-slate-200 hover:border-slate-300'
+            ? "border-sky-500 ring-2 ring-sky-500/20"
+            : "border-slate-200 hover:border-slate-300"
         }`}
       >
         <div className="flex min-w-0 items-center gap-2">
           <CalendarIcon className="h-4 w-4 shrink-0 text-slate-400" />
-          <span className={`truncate ${value ? 'font-medium text-slate-900' : 'text-slate-400'}`}>
+          <span
+            className={`truncate ${value ? "font-medium text-slate-900" : "text-slate-400"}`}
+          >
             {value ? formatDisplay(value) : placeholder}
           </span>
         </div>
@@ -177,7 +162,7 @@ export function DatePicker({
             aria-label="Clear date"
             onClick={(e) => {
               e.stopPropagation();
-              onChange('');
+              onChange("");
               setOpen(false);
             }}
             className="rounded-md p-0.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
@@ -189,15 +174,15 @@ export function DatePicker({
 
       {open &&
         coords &&
-        typeof document !== 'undefined' &&
+        typeof document !== "undefined" &&
         createPortal(
           <div
             ref={popoverRef}
             style={{
-              position: 'fixed',
+              position: "fixed",
               top: coords.top,
               left: coords.left,
-              transform: coords.openUpward ? 'translateY(-100%)' : 'none',
+              transform: coords.openUpward ? "translateY(-100%)" : "none",
             }}
             className="z-[9999] w-72 rounded-md border border-slate-200 bg-white p-3.5 shadow-xl"
           >
@@ -225,7 +210,10 @@ export function DatePicker({
 
             <div className="mb-1 grid grid-cols-7 text-center">
               {WEEKDAYS.map((day) => (
-                <span key={day} className="py-1 text-[11px] font-semibold text-slate-400">
+                <span
+                  key={day}
+                  className="py-1 text-[11px] font-semibold text-slate-400"
+                >
                   {day}
                 </span>
               ))}
@@ -251,10 +239,10 @@ export function DatePicker({
                     }}
                     className={`flex h-8 w-8 items-center justify-center rounded-md text-xs font-medium transition ${
                       isSelected
-                        ? 'bg-sky-600 font-semibold text-white shadow-xs'
+                        ? "bg-sky-600 font-semibold text-white shadow-xs"
                         : isToday
-                          ? 'border border-sky-300 bg-sky-50 font-semibold text-sky-700'
-                          : 'text-slate-700 hover:bg-slate-100'
+                          ? "border border-sky-300 bg-sky-50 font-semibold text-sky-700"
+                          : "text-slate-700 hover:bg-slate-100"
                     }`}
                   >
                     {dayNum}
@@ -277,7 +265,7 @@ export function DatePicker({
               <button
                 type="button"
                 onClick={() => {
-                  onChange('');
+                  onChange("");
                   setOpen(false);
                 }}
                 className="text-xs font-medium text-slate-500 hover:text-slate-700"
@@ -286,7 +274,7 @@ export function DatePicker({
               </button>
             </div>
           </div>,
-          document.body
+          document.body,
         )}
     </div>
   );

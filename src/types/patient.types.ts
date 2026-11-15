@@ -45,6 +45,6 @@ export type UpdatePatientPayload = Partial<CreatePatientPayload> & { id: string 
 export interface PatientFormModalProps {
   open: boolean;
   onClose: () => void;
-  patient?: Patient | null;
   lockedDoctorId?: string;
+  patient?: Patient | null;
 }

@@ -1,4 +1,5 @@
 import { PaginationMeta } from "./api.types";
+import { DashboardAnalytics } from "./analytics.types";
 import { StatTone } from "@/components/shared/StatCard";
 
 export interface StatCardProps {
@@ -148,5 +149,50 @@ export interface ModalProps {
   onClose: () => void;
   description?: string;
   maxWidthClass?: string;
+  children: React.ReactNode;
+}
+
+export interface AnalyticsChartsProps {
+  analytics: DashboardAnalytics;
+}
+
+export interface SelectOption {
+  label: string;
+  value: string;
+}
+
+export interface MenuCoords {
+  top: number;
+  left: number;
+  width: number;
+  maxHeight: number;
+  openUpward: boolean;
+}
+
+export interface DatePickerProps {
+  id?: string;
+  value: string; // YYYY-MM-DD
+  className?: string;
+  placeholder?: string;
+  onChange: (value: string) => void;
+}
+
+export interface PopoverCoords {
+  top: number;
+  left: number;
+  openUpward: boolean;
+}
+
+export interface SelectFilterConfig {
+  id: string;
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  options: Array<{ label: string; value: string }>;
+}
+
+export interface RevealProps {
+  delayMs?: number;
+  className?: string;
   children: React.ReactNode;
 }

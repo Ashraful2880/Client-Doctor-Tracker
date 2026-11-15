@@ -1,11 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { Activity, Lock, Mail } from "lucide-react";
 import { useLoginMutation } from "@/store/api/authApi";
 import { setCredentials } from "@/store/slices/authSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { Activity, Eye, EyeOff, Lock, Mail } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -16,6 +17,7 @@ export default function LoginPage() {
   const [errorMsg, setErrorMsg] = useState("");
   const [password, setPassword] = useState("Admin@123");
   const [email, setEmail] = useState("admin@dt.com");
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (hydrated && token) {
@@ -94,12 +96,24 @@ export default function LoginPage() {
               <input
                 required
                 id="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 placeholder="Enter your password"
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 bg-white py-2.5 pl-9 pr-3 text-sm text-slate-900 focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/20"
+                className="w-full rounded-lg border border-slate-300 bg-white py-2.5 pl-9 pr-10 text-sm text-slate-900 focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/20"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded p-1 text-slate-400 transition hover:text-slate-600"
+              >
+                {showPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </button>
             </div>
           </div>
 
@@ -112,13 +126,22 @@ export default function LoginPage() {
           </button>
         </form>
 
+        <p className="mt-5 text-center text-sm text-slate-600">
+          Don&apos;t have an account?{" "}
+          <Link
+            href="/register"
+            className="font-semibold text-sky-600 transition hover:text-sky-700"
+          >
+            Create Account
+          </Link>
+        </p>
+
         <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-3.5 text-xs text-slate-600">
           <p className="font-semibold text-slate-800">
             Seeded Admin Credentials
           </p>
           <p className="mt-1">
-            Email:{" "}
-            <code className="font-mono text-sky-700">admin@dt.com</code>
+            Email: <code className="font-mono text-sky-700">admin@dt.com</code>
           </p>
           <p>
             Password: <code className="font-mono text-sky-700">Admin@123</code>

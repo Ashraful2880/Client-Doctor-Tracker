@@ -16,22 +16,9 @@ import {
 } from "recharts";
 import React from "react";
 import { formatShortDate } from "@/utils/formatters";
-import { DashboardAnalytics } from "@/types/analytics.types";
 import { EmptyState } from "@/components/shared/EmptyState";
-
-const PIE_COLORS = [
-  "#3b82f6",
-  "#f59e0b",
-  "#10b981",
-  "#8b5cf6",
-  "#06b6d4",
-  "#ec4899",
-  "#64748b",
-];
-
-interface AnalyticsChartsProps {
-  analytics: DashboardAnalytics;
-}
+import { PIE_COLORS } from "@/components/shared/AllOptions";
+import { AnalyticsChartsProps } from "@/types/InterfaceAll";
 
 export function AnalyticsCharts({ analytics }: AnalyticsChartsProps) {
   const { patientsPerDoctor, dateStats, conditionDistribution, summary } =

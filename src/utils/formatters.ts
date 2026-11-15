@@ -23,3 +23,18 @@ export const getDoctorName = (
   if (typeof doctorRef === "string") return "Assigned Doctor";
   return doctorRef?.name ?? "Unknown Doctor";
 };
+
+export const toIsoDate = (year: number, month: number, day: number): string =>
+  `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
+export const formatDisplay = (iso: string): string => {
+  if (!iso) return "";
+  const [y, m, d] = iso.split("-").map(Number);
+  if (!y || !m || !d) return iso;
+  const date = new Date(y, m - 1, d);
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(date);
+};
